@@ -1,0 +1,19 @@
+# Normalize text files to LF in the repo (Linux container / bash scripts).
+# Prevents CRLF breakage when cloning on Windows and mounting into the devcontainer.
+* text=auto eol=lf
+
+# Windows helpers (run on host, not inside the container)
+*.bat text eol=crlf
+
+# Explicit shell/init files (must stay LF for bash)
+*.sh text eol=lf
+.designinit text eol=lf
+
+# Binary assets — do not line-ending-normalize
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.pyc binary
