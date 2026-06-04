@@ -1,0 +1,11 @@
+* Lab 1 P1 - RC circuit (1.8 V)
+Vi n1 0 PULSE(0 1.8 0 0.2n 0.2n 3n 6n)
+R1 n1 n2 1k
+R2 n2 0 2k
+C1 n2 0 0.7p
+.tran 1p 15n
+.control
+run
+wrdata rc.txt v(n1) v(n2)
+.endc
+.end

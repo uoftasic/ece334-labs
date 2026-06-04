@@ -1,0 +1,20 @@
+* Lab 1 P2/L2 — CMOS inverter reference (hand-written; prefer xschem netlist when available)
+.lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+Vdd vdd 0 1.8
+Vgnd vss 0 0
+Vi vi 0 PULSE(0 1.8 0 0.2n 0.2n 3n 6n)
+Xn vo vi vss vss sky130_fd_pr__nfet_01v8 W=1u L=0.5u
+Xp vo vi vdd vdd sky130_fd_pr__pfet_01v8 W=3u L=0.5u
+Cload vo vss 0.2p
+.tran 1p 15n
+.control
+run
+wrdata inv_tran.txt v(vi) v(vo)
+.endc
+.dc Vi 0 1.8 0.005
+.control
+reset
+run
+wrdata inv_dc.txt v(vi) v(vo)
+.endc
+.end

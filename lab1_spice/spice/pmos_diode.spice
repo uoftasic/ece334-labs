@@ -1,0 +1,13 @@
+* PMOS diode-connected extraction
+.lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+Vd dg 0 dc 0
+Vs s  0 dc 1.8
+Xp dg dg s s sky130_fd_pr__pfet_01v8 W=10u L=2u
+.dc Vd 0 1.8 0.01
+.control
+run
+let vsg = 1.8 - v(dg)
+let id  = i(Vd)
+wrdata pmos_iv.txt vsg id
+.endc
+.end

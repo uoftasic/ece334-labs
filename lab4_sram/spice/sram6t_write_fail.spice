@@ -1,0 +1,11 @@
+* Lab 4 L7 — SRAM write stability violation (weaken access or strengthen load PMOS)
+.lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+* .include sram6t_write_fail.spice
+Vdd vdd 0 1.8
+Vss vss 0 0
+.ic v(A)=0
+.tran 10p 100n
+.control
+run
+.endc
+.end

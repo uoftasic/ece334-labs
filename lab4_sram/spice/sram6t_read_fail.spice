@@ -1,0 +1,12 @@
+* Lab 4 L6 — SRAM read stability violation (shrink driver NMOS vs access)
+* Copy sram6t_nominal.spice after netlisting and reduce W of driver transistors
+.lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+* .include sram6t_read_fail.spice
+Vdd vdd 0 1.8
+Vss vss 0 0
+.ic v(A)=0
+.tran 10p 100n
+.control
+run
+.endc
+.end

@@ -1,0 +1,4 @@
+# Lab 2 — source SKY130 Magic technology (requires PDK_ROOT in environment)
+if {[info exists env(PDK_ROOT)]} {
+  source $env(PDK_ROOT)/sky130A/libs.tech/magic/sky130A.magicrc
+}

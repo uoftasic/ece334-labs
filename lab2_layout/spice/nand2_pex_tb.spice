@@ -1,0 +1,20 @@
+* Lab 2 L4 — NAND2 simulation (swap include for ideal vs PEX)
+.lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+.include nand2.pex.spice
+* .include nand2.lvs.spice
+Vdd  VPWR 0 1.8
+Vgnd VGND 0 0
+VB   B 0 1.8
+VA   A 0 PULSE(0 1.8 0 200p 200p 3n 6n)
+Xdut A B Y VPWR VGND nand2
+CL   Y 0 0.1p
+.tran 1p 18n
+.meas tran tpHL trig v(A) val=0.9 rise=1 targ v(Y) val=0.9 fall=1
+.meas tran tpLH trig v(A) val=0.9 fall=1 targ v(Y) val=0.9 rise=1
+.meas tran trise trig v(Y) val=0.18 rise=1 targ v(Y) val=1.62 rise=1
+.meas tran tfall trig v(Y) val=1.62 fall=1 targ v(Y) val=0.18 fall=1
+.control
+run
+wrdata nand2_pex_wave.txt v(A) v(Y)
+.endc
+.end
