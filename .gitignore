@@ -20,6 +20,10 @@ lab*/pmos_diode.spice
 *.sch.spice
 *.spice.out
 
+# Local design notes / specs — not pushed upstream
+docs/superpowers/
+.ipynb_checkpoints/
+
 # OS / editor
 .DS_Store
 *.swp

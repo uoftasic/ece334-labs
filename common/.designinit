@@ -9,6 +9,13 @@ fi
 export DESIGNS=/foss/designs
 export XSCHEMRC="${DESIGNS}/common/xschemrc"
 
+# Course Python helper library: `import ece334lib` works from any lab notebook
+export PYTHONPATH="${DESIGNS}/common${PYTHONPATH:+:${PYTHONPATH}}"
+
+# Launch JupyterLab for the interactive lab notebooks (open the printed URL in
+# the noVNC desktop's browser, or forward port 8888 to your host).
+alias jlab='jupyter lab --no-browser --ip=0.0.0.0 --port=8888 --notebook-dir="${DESIGNS}"'
+
 # Help students find course labs quickly
 alias lab0='cd "${DESIGNS}/lab0_setup"'
 alias lab1='cd "${DESIGNS}/lab1_spice"'

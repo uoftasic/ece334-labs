@@ -3,8 +3,8 @@
 Vdd vdd 0 1.8
 Vgnd vss 0 0
 Vi vi 0 PULSE(0 1.8 0 0.2n 0.2n 3n 6n)
-Xn vo vi vss vss sky130_fd_pr__nfet_01v8 W=1u L=0.5u
-Xp vo vi vdd vdd sky130_fd_pr__pfet_01v8 W=3u L=0.5u
+Xn vo vi vss vss sky130_fd_pr__nfet_01v8 W=1 L=0.5
+Xp vo vi vdd vdd sky130_fd_pr__pfet_01v8 W=3 L=0.5
 Cload vo vss 0.2p
 .tran 1p 15n
 .control

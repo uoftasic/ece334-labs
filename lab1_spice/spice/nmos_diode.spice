@@ -1,7 +1,7 @@
 * NMOS diode-connected extraction
 .lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
 Vg dg 0 dc 0
-Xn dg dg 0 0 sky130_fd_pr__nfet_01v8 W=10u L=2u
+Xn dg dg 0 0 sky130_fd_pr__nfet_01v8 W=10 L=2
 .dc Vg 0 1.8 0.01
 .control
 run
