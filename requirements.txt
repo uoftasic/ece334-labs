@@ -1,0 +1,9 @@
+# Python packages for the ECE334 interactive lab notebooks.
+# The IIC-OSIC-TOOLS container already ships these; this file pins what the
+# course relies on so notebooks run the same everywhere.
+#
+#   pip install -r requirements.txt   # only if something is missing
+jupyterlab>=4.0
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
