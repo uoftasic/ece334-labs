@@ -1,0 +1,22 @@
+# ECE334 course environment — source from container shell or postCreateCommand
+# Usage:  . /foss/designs/common/.designinit
+
+export PDK=sky130A
+if command -v sak-pdk >/dev/null 2>&1; then
+  sak-pdk sky130A 2>/dev/null || true
+fi
+
+export DESIGNS=/foss/designs
+export XSCHEMRC="${DESIGNS}/common/xschemrc"
+
+# Help students find course labs quickly
+alias lab0='cd "${DESIGNS}/lab0_setup"'
+alias lab1='cd "${DESIGNS}/lab1_spice"'
+alias lab2='cd "${DESIGNS}/lab2_layout"'
+alias lab3='cd "${DESIGNS}/lab3_digital"'
+alias lab4='cd "${DESIGNS}/lab4_sram"'
+
+# Magic: X11 driver is reliable in the noVNC container (XR/Cairo can BadAlloc on pixmap create).
+alias magic130='magic -d X11 -T sky130A'
+
+echo "ECE334: PDK=${PDK:-unset}  PDK_ROOT=${PDK_ROOT:-unset}  designs=${DESIGNS}"

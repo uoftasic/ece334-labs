@@ -1,0 +1,13 @@
+# Course-wide XSchem configuration (set XSCHEMRC to this file in .designinit)
+# SKY130 symbol library path — requires sak-pdk sky130A / open_pdks in container
+
+set xschem_library    $::env(PDK_ROOT)/$::env(PDK)/libs.tech/xschem
+append XSCHEM_LIBRARY_PATH $xschem_library
+append XSCHEM_LIBRARY_PATH /foss/designs/common
+
+set netlist_dir       /foss/designs/.xschem/simulations
+set netlist_spgice    1
+set hdl_spgice        1
+
+# ngspice as default SPICE simulator (IIC-OSIC-TOOLS)
+set netlist_command   {ngspice -b -o %o %n}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ECE334 EDA desktop</title>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var password = params.get("password") || "abc123";
+      var target = "vnc.html?autoconnect=true&resize=scale&password="
+        + encodeURIComponent(password);
+      window.location.replace(target);
+    })();
+  </script>
+</head>
+<body>
+  <p>Opening the EDA desktop… <a href="vnc.html">Click here</a> if you are not redirected.</p>
+</body>
+</html>

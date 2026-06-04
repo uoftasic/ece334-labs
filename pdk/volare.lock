@@ -1,0 +1,13 @@
+# SKY130 PDK pin for reproducibility (term-long lock)
+#
+# Before opening the course to students:
+#   1. In the container:  sak-pdk sky130A
+#   2. Record the installed open_pdks / volare build, e.g.:
+#        volare ls --pdk sky130  (if volare is installed)
+#   3. Replace the placeholder below with the pinned hash/tag.
+#
+# See: https://github.com/fossi-foundation/volare
+
+PDK=sky130A
+VOLARE_BUILD=REPLACE_WITH_PINNED_HASH_AFTER_PILOT
+IMAGE_TAG=2026.04

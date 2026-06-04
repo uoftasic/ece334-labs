@@ -1,0 +1,10 @@
+{
+  "name": "ECE334-OSIC",
+  "image": "hpretl/iic-osic-tools-devcontainer:2026.04",
+  "pullPolicy": "always",
+  "workspaceFolder": "/foss/designs",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/foss/designs,type=bind"
+  ],
+  "postCreateCommand": "bash /foss/designs/scripts/fix_line_endings.sh /foss/designs 2>/dev/null || for f in /foss/designs/common/.designinit /foss/designs/scripts/*.sh; do [ -f \"$f\" ] && sed -i 's/\\r$//' \"$f\"; done; test -f /foss/designs/common/.designinit && . /foss/designs/common/.designinit || true"
+}
