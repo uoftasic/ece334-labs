@@ -4,7 +4,7 @@ This repository is your **workbench**. Fork or clone it, start the container, an
 work here — your edits live in your clone and persist on your computer.
 
 > 📖 **All lab manuals, the full setup guide, and cheatsheets are online:**
-> **https://ece334.github.io/ece334-docs/**
+> **https://uoftasic.github.io/ece334-docs/**
 
 ## Quick start
 
