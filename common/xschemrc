@@ -23,9 +23,14 @@ if {[file exists $pdk_xschemrc]} {
 # symbol netlist as "IS MISSING !!!!".
 append XSCHEM_LIBRARY_PATH :/foss/designs
 append XSCHEM_LIBRARY_PATH :/foss/designs/common
+append XSCHEM_LIBRARY_PATH :/foss/designs/common/xschem
 
 # Each lab keeps its schematics and DUT symbols in <lab>/xschem.  Add them so a
 # testbench can refer to a sibling symbol by bare name (e.g. "dut_inv.sym").
+#
+# These directories all share one flat namespace, and an earlier entry wins, so
+# a cell name used by two labs would silently resolve to the wrong file. Cells
+# shared between labs therefore live in common/xschem, not in a lab folder.
 foreach labdir [lsort [glob -nocomplain -directory /foss/designs -type d {lab*}]] {
     if {[file isdirectory ${labdir}/xschem]} {
         append XSCHEM_LIBRARY_PATH :${labdir}/xschem

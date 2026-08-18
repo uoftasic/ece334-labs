@@ -34,7 +34,20 @@ if [ -d "$LABDIR/xschem" ]; then
       grep 'IS MISSING' "$deck" | sed 's/^/    /'
       fail=1; continue
     fi
-    echo "ok   netlist: $name"
+    # Netlisting cleanly is not enough: a DUT whose schematic is an empty stub
+    # netlists without complaint and then fails at 'write' with "no writable
+    # vector found". Simulate the generated deck and insist it produces output.
+    if ! (cd "$out" && timeout 300 ngspice -b "$name.spice" >sim.log 2>&1); then
+      echo "FAIL simulate(netlisted): $name"; tail -12 "$out/sim.log" | sed 's/^/    /'
+      fail=1; continue
+    fi
+    if grep -qiE "^Error|Error during|could not find a valid modelname" "$out/sim.log"; then
+      echo "FAIL simulate(netlisted, errors): $name"
+      grep -iE "^Error|Error during|could not find a valid modelname" "$out/sim.log" \
+        | head -5 | sed 's/^/    /'
+      fail=1; continue
+    fi
+    echo "ok   netlist+sim: $name"
   done
 fi
 
