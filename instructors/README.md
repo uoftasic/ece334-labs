@@ -57,6 +57,20 @@ Two rules the generators encode, both learned the hard way:
   only. A title placed above the drawing is silently cropped in the exported
   figure, so anchor title text inside the geometry.
 
+## Checks
+
+    python3 instructors/check_notebooks.py
+
+Compile-checks every code cell in every notebook and confirms each carries the
+`id` field nbformat 4.5 wants. Executing a notebook to find a typo costs
+minutes; this costs a second. Run it after regenerating a notebook.
+
+    scripts/verify_solutions.sh <labdir> <name>
+
+Lays the reference solutions over a scratch copy of the lab and runs the full
+netlist to simulate chain. `verify_lab.sh` on a student tree is *expected* to
+report "the DUT has not been built yet" -- the stubs ship empty on purpose.
+
 ## Schematic figures
 
     figures/export_schematic.sh <cell.sch> <out.png> [density]
