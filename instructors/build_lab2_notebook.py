@@ -124,7 +124,12 @@ def magic(commands, cell="nand2"):
 
 out = magic(["drc check", "drc catchup", 'puts "DRC_COUNT=[drc list count total]"'])
 m = re.search(r"DRC_COUNT=(\\d+)", out)
-print(f"drc count = {m.group(1) if m else '?'}")
+if m:
+    print(f"drc count = {m.group(1)}")
+else:
+    # Almost always a missing .magicrc in lab2_layout -- see the manual's L1.
+    print("Magic did not report a count. Its output was:\\n")
+    print(out[-1500:])
 """),
     md(ANSWER + """
 If you had violations along the way, name one rule `drc why` reported and say

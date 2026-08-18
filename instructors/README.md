@@ -38,6 +38,7 @@ and computing every position from them removes that whole class of mistake, and
 makes the result reviewable as a diff.
 
     build_dff.py                common/xschem/dff.sch
+    build_lab3_xschem.py        the Lab 3 AOI21 reference solution
     build_lab4_xschem.py        the Lab 4 SRAM cell, periphery and testbench
     build_lab1_notebook.py      lab1_spice/lab1.ipynb
     build_lab2_notebook.py      lab2_layout/lab2.ipynb
@@ -52,6 +53,9 @@ Two rules the generators encode, both learned the hard way:
 - A `gnd` symbol and a `lab_pin` cannot share a point. XSchem keeps the
   `lab_pin` name and the ground connection is lost, which leaves the supplies
   floating. Use a 0 V source instead.
+- XSchem's `--pdf` page fit computes its bounding box from symbols and wires
+  only. A title placed above the drawing is silently cropped in the exported
+  figure, so anchor title text inside the geometry.
 
 ## Schematic figures
 
