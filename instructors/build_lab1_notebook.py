@@ -284,6 +284,11 @@ assumption broke.
 """),
 ]
 
+# nbformat 4.5 requires a stable id on every cell; without one, jupyter warns
+# on every execution and will eventually refuse the notebook outright.
+for _i, _c in enumerate(cells):
+    _c["id"] = "c%03d" % _i
+
 nb = {
     "cells": cells,
     "metadata": {

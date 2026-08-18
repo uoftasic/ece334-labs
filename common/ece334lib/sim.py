@@ -105,6 +105,51 @@ def sweep(deck_template, param, values, measure_fn, output, fmt="raw",
     return pd.DataFrame(rows)
 
 
+def sweep_param(deck, param, values, measure_fn, output, fmt="raw", names=None):
+    """Sweep a ``.param NAME=value`` line through ``values``.
+
+    Unlike :func:`sweep`, this needs no ``@token@`` in the deck: it rewrites the
+    existing ``.param`` line, so the shipped decks run unchanged both from a
+    notebook and from ``ngspice -b`` on the command line.
+
+        df = sim.sweep_param("spice/dff_char.spice", "DSKEW",
+                             ["300p", "240p", "220p"],
+                             lambda w: {"q": float(w["q"][-1])},
+                             output="dff_char.raw")
+
+    ``measure_fn(wave) -> dict`` is called once per value. Returns a pandas
+    ``DataFrame`` with a column for the parameter plus one per measured key.
+    """
+    import re
+
+    import pandas as pd  # lazy: only the sweeps need pandas
+
+    deck = os.path.abspath(deck)
+    with open(deck) as fh:
+        template = fh.read()
+    pattern = re.compile(r"^([ \t]*\.param[ \t]+%s[ \t]*=[ \t]*)\S+"
+                         % re.escape(param), re.IGNORECASE | re.MULTILINE)
+    if not pattern.search(template):
+        raise ValueError(f"no '.param {param}=' line in {deck!r}")
+
+    rows = []
+    src_dir = os.path.dirname(deck)
+    for val in values:
+        with tempfile.TemporaryDirectory(dir=src_dir or None,
+                                         prefix=".sweep-") as td:
+            new = os.path.join(td, "sweep.spice")
+            with open(new, "w") as fh:
+                fh.write(pattern.sub(lambda m: m.group(1) + str(val), template))
+            # Run with the deck's own directory as cwd, not the temp one: the
+            # decks carry relative .include paths (spice/include/dff.spice)
+            # that only resolve from there.
+            wave = run_deck(new, output=output, fmt=fmt, names=names, cwd=src_dir)
+            row = {param: val}
+            row.update(measure_fn(wave))
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
 def netlist_and_run(sch, output, fmt="raw", names=None):
     """Netlist an XSchem schematic headlessly, then simulate the result.
 

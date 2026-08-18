@@ -1,0 +1,24 @@
+# XSchem rc used only for exporting schematic figures for the manual.
+# Not used by students: it differs from common/xschemrc in one way, by
+# switching off the operating-point annotation layers.
+#
+#   xschem --pdf -c -q -x --rcfile common/xschem/exportrc cell.sch
+#
+# --pdf is the only export that works headless. It sets its own 842x595
+# viewport and calls zoom_full itself, so it needs no window and no window
+# manager. --svg and --png both wait on a visible .drw widget and export
+# whatever happens to be in the viewport, which is nothing under `-x`.
+#
+# The PDF lands in the CURRENT DIRECTORY as plot.pdf. `-o` does not apply to it.
+
+set designs /foss/designs
+if {[info exists env(DESIGNS)]} { set designs $env(DESIGNS) }
+source ${designs}/common/xschemrc
+
+# The sky130 device symbols carry `id=`, `gm=`, `vgs=` and `vds=` annotation
+# texts on layers 17 and 15. They are placeholders until an operating point is
+# annotated, so in a figure they are `id=-` noise sitting on top of the device.
+# Setting these here rather than via --command matters: --command is evaluated
+# before the layer table is read back, so a value set there does not survive.
+set enable_layer(15) 0
+set enable_layer(17) 0

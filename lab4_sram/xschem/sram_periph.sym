@@ -1,0 +1,35 @@
+v {xschem version=3.4.8 file_version=1.2}
+G {type=subcircuit
+format="@name @pinlist @symname"
+template="name=x1"
+}
+V {}
+S {}
+E {}
+L 4 -80 -90 80 -90 {}
+L 4 80 -90 80 90 {}
+L 4 80 90 -80 90 {}
+L 4 -80 90 -80 -90 {}
+L 4 -100 -40 -80 -40 {}
+L 4 -100 0 -80 0 {}
+L 4 -100 40 -80 40 {}
+L 4 100 -40 80 -40 {}
+L 4 100 40 80 40 {}
+L 4 0 -105 0 -90 {}
+L 4 0 105 0 90 {}
+B 5 -102.5 -42.5 -97.5 -37.5 {name=pre dir=in}
+B 5 -102.5 -2.5 -97.5 2.5 {name=write dir=in}
+B 5 -102.5 37.5 -97.5 42.5 {name=data dir=in}
+B 5 97.5 -42.5 102.5 -37.5 {name=bit dir=inout}
+B 5 97.5 37.5 102.5 42.5 {name=bit_b dir=inout}
+B 5 -2.5 -107.5 2.5 -102.5 {name=vdd dir=inout}
+B 5 -2.5 102.5 2.5 107.5 {name=vss dir=inout}
+T {@name} -78 -104 0 0 0.3 0.3 {}
+T {PERIPHERY} -72 -10 0 0 0.4 0.4 {}
+T {pre} -74 -50 0 0 0.22 0.22 {}
+T {write} -74 -10 0 0 0.22 0.22 {}
+T {data} -74 30 0 0 0.22 0.22 {}
+T {bit} 47 -50 0 0 0.22 0.22 {}
+T {bit_b} 29 30 0 0 0.22 0.22 {}
+T {vdd} 4 -88 0 0 0.2 0.2 {}
+T {vss} 4 78 0 0 0.2 0.2 {}
