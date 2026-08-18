@@ -65,6 +65,13 @@ Compile-checks every code cell in every notebook and confirms each carries the
 `id` field nbformat 4.5 wants. Executing a notebook to find a typo costs
 minutes; this costs a second. Run it after regenerating a notebook.
 
+Notebooks ship **unexecuted**: a student receives a blank report to fill in.
+Verify one by executing it to a scratch copy rather than in place, then
+regenerate the shipped file:
+
+    jupyter nbconvert --to notebook --execute --output /tmp/check.ipynb lab4.ipynb
+    python3 instructors/build_lab4_notebook.py lab4_sram/lab4.ipynb
+
     scripts/verify_solutions.sh <labdir> <name>
 
 Lays the reference solutions over a scratch copy of the lab and runs the full

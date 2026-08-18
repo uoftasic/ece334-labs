@@ -56,6 +56,7 @@ jlab
 import os
 import re
 import subprocess
+import tempfile
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -211,8 +212,11 @@ def compare_at(cload):
                       deck, flags=re.M)
         deck = re.sub(r"^(\\.param\\s+CLOAD\\s*=\\s*)\\S+", r"\\g<1>" + str(cload),
                       deck, flags=re.M)
-        path = f"{LAB}/_compare_tmp.spice"
-        open(path, "w").write(deck)
+        # A unique name, written beside the deck so its relative .include
+        # still resolves. A fixed name breaks if anything else is running.
+        fd, path = tempfile.mkstemp(prefix="_compare_", suffix=".spice", dir=LAB)
+        with os.fdopen(fd, "w") as fh:
+            fh.write(deck)
         try:
             w = sim.run_deck(path, output="nand2_wave.raw", cwd=LAB)
             # prop_delays returns (t_pHL, t_pLH); the falling output edge is
@@ -220,7 +224,8 @@ def compare_at(cload):
             out[label] = measure.prop_delays(w, "a", "out", vdd=VDD)[0]
             out[label + "_wave"] = w
         finally:
-            os.remove(path)
+            if os.path.exists(path):
+                os.remove(path)
     return out
 
 r = compare_at("0.1p")
