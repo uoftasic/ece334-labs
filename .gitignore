@@ -43,3 +43,8 @@ plot.svg
 lab2_layout/nand2.mag
 lab2_layout/nand2.*.spice
 lab2_layout/_compare_*.spice
+
+# verify_solutions.sh scratch lab. Named lab0_* so it sorts ahead of the real
+# labs on XSCHEM_LIBRARY_PATH; a killed run leaves one behind.
+lab0_solcheck/
+lab0_figures/
