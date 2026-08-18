@@ -37,6 +37,11 @@ foreach labdir [lsort [glob -nocomplain -directory /foss/designs -type d {lab*}]
     }
 }
 
+# The PDK sets XSCHEM_START_WINDOW to its own read-only test schematic, which
+# xschem opens on startup and then raises a "Save file" browser over. Students
+# open their own testbench, so clear it.
+set XSCHEM_START_WINDOW {}
+
 # One well-known place for netlists and simulation results, regardless of which
 # directory XSchem was started from. The notebooks resolve result files against
 # this same path via ece334lib.sim.raw(), so the launcher buttons and the
