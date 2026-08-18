@@ -15,6 +15,9 @@ LAB="${1:?usage: verify_solutions.sh <labdir> <instructors-subdir>}"
 REF="${2:?usage: verify_solutions.sh <labdir> <instructors-subdir>}"
 DESIGNS="${DESIGNS:-/foss/designs}"
 SCRATCH="${DESIGNS}/lab0_solcheck"
+# Remove a stale scratch left by a killed run: it would otherwise sit on
+# XSCHEM_LIBRARY_PATH and shadow the real labs.
+rm -rf "$SCRATCH"
 
 [ -d "${DESIGNS}/${LAB}/xschem" ]        || { echo "no ${LAB}/xschem" >&2; exit 2; }
 [ -d "${DESIGNS}/instructors/${REF}/xschem" ] || { echo "no instructors/${REF}/xschem" >&2; exit 2; }

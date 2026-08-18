@@ -13,7 +13,7 @@ Press "Netlist & Simulate". It writes rc_tb.raw (v(in), v(out)).
 Then open lab1.ipynb, section P1, and run the measurement cell.
 
 Predict both numbers by hand BEFORE you simulate.} -620 -270 0 0 0.35 0.35 {}
-C {devices/code_shown.sym} -620 -80 0 0 {name=CONTROL only_toplevel=true value="
+C {devices/code_shown.sym} -620 -40 0 0 {name=CONTROL only_toplevel=true value="
 .control
 save all
 set filetype=ascii
@@ -21,9 +21,9 @@ tran 1p 15n
 write rc_tb.raw v(in) v(out)
 .endc
 "}
-C {devices/launcher.sym} -620 140 0 0 {name=h1 descr="Netlist & Simulate"
+C {devices/launcher.sym} -620 150 0 0 {name=h1 descr="Netlist & Simulate"
 tclcommand="xschem save; xschem netlist; xschem simulate"}
-C {devices/launcher.sym} -620 180 0 0 {name=h2 descr="Run analysis notebook"
+C {devices/launcher.sym} -620 190 0 0 {name=h2 descr="Run analysis notebook"
 tclcommand="exec sh -c {cd /foss/designs/lab1_spice && jupyter nbconvert --to notebook --execute --inplace lab1.ipynb} &"}
 C {devices/vsource.sym} 0 60 0 0 {name=Vin value="PULSE(0 1.8 0 0.2n 0.2n 3n 6n)"}
 C {devices/lab_pin.sym} 0 30 0 0 {name=l_in lab=in}

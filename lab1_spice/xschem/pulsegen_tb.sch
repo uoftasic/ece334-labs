@@ -12,8 +12,8 @@ Build the circuit inside the DUT (double-click it -> dut_pulsegen.sch).
 Required net names: in  n3  out  vdd  vss.
 
 Writes pulsegen_tb.raw with v(in), v(n3), v(out).} -700 -370 0 0 0.32 0.32 {}
-C {devices/code_shown.sym} -700 -200 0 0 {name=MODELS only_toplevel=true value=".lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt"}
-C {devices/code_shown.sym} -700 -150 0 0 {name=CONTROL only_toplevel=true value="
+C {devices/code_shown.sym} -700 -130 0 0 {name=MODELS only_toplevel=true value=".lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt"}
+C {devices/code_shown.sym} -700 -80 0 0 {name=CONTROL only_toplevel=true value="
 .option wnflag=1
 .temp 27
 .control
@@ -23,11 +23,11 @@ tran 1p 25n
 write pulsegen_tb.raw v(in) v(n3) v(out)
 .endc
 "}
-C {devices/launcher.sym} -700 120 0 0 {name=h1 descr="Netlist & Simulate"
+C {devices/launcher.sym} -700 190 0 0 {name=h1 descr="Netlist & Simulate"
 tclcommand="xschem save; xschem netlist; xschem simulate"}
-C {devices/launcher.sym} -700 160 0 0 {name=h2 descr="Annotate OP"
+C {devices/launcher.sym} -700 230 0 0 {name=h2 descr="Annotate OP"
 tclcommand="set show_hidden_texts 1; xschem annotate_op"}
-C {devices/launcher.sym} -700 200 0 0 {name=h3 descr="Run analysis notebook"
+C {devices/launcher.sym} -700 270 0 0 {name=h3 descr="Run analysis notebook"
 tclcommand="exec sh -c {cd /foss/designs/lab1_spice && jupyter nbconvert --to notebook --execute --inplace lab1.ipynb} &"}
 N -240 0 -85 0 {lab=in}
 N 85 0 200 0 {lab=out}
@@ -40,9 +40,9 @@ C {devices/lab_pin.sym} 0 -65 0 0 {name=l_vdd lab=vdd}
 C {devices/lab_pin.sym} 0 65 0 0 {name=l_vss lab=vss}
 C {devices/lab_pin.sym} 200 0 0 0 {name=l_out lab=out}
 C {devices/lab_pin.sym} 85 -30 0 0 {name=l_n3 lab=n3}
-C {devices/vsource.sym} 400 60 0 0 {name=Vdd value=1.8}
-C {devices/lab_pin.sym} 400 30 0 0 {name=l_vddsrc lab=vdd}
-C {devices/gnd.sym} 400 90 0 0 {name=g2 lab=0}
-C {devices/vsource.sym} 560 60 0 0 {name=Vss value=0}
-C {devices/lab_pin.sym} 560 30 0 0 {name=l_vsssrc lab=vss}
-C {devices/gnd.sym} 560 90 0 0 {name=g3 lab=0}
+C {devices/vsource.sym} 340 190 0 0 {name=Vdd value=1.8}
+C {devices/lab_pin.sym} 340 160 0 0 {name=l_vddsrc lab=vdd}
+C {devices/gnd.sym} 340 220 0 0 {name=g2 lab=0}
+C {devices/vsource.sym} 500 190 0 0 {name=Vss value=0}
+C {devices/lab_pin.sym} 500 160 0 0 {name=l_vsssrc lab=vss}
+C {devices/gnd.sym} 500 220 0 0 {name=g3 lab=0}

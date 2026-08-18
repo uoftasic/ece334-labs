@@ -1,0 +1,25 @@
+magic
+tech sky130A
+timestamp 1787083374
+<< checkpaint >>
+rect -555 730 735 770
+rect -630 -630 830 730
+rect -555 -670 735 -630
+<< nmos >>
+rect 75 0 105 100
+<< ndiff >>
+rect 0 90 75 100
+rect 0 10 5 90
+rect 55 10 75 90
+rect 0 0 75 10
+rect 105 90 200 100
+rect 105 10 125 90
+rect 175 10 200 90
+rect 105 0 200 10
+<< ndiffc >>
+rect 5 10 55 90
+rect 125 10 175 90
+<< poly >>
+rect 75 100 105 140
+rect 75 -40 105 0
+<< end >>
