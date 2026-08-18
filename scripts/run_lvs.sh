@@ -23,6 +23,7 @@ cell="${3:-$(basename "$layout" | sed -e 's/\.spice$//' -e 's/\.lvs$//')}"
 setup="${PDK_ROOT}/sky130A/libs.tech/netgen/sky130A_setup.tcl"
 [ -f "$setup" ] || { echo "no netgen setup at $setup" >&2; exit 2; }
 
+report="$(basename "$layout" .spice | sed -e 's/\.lvs$//').lvs.log"
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 
@@ -54,14 +55,14 @@ netgen -batch lvs "$layout $cell" "$sch_net $cell" "$setup" "$work/lvs.out" \
 
 if [ -f "$work/lvs.out" ]; then
   sed -n '/Subcircuit summary/,$p' "$work/lvs.out" | head -40
-  cp "$work/lvs.out" "./$(basename "$layout" .spice).lvs.log"
+  cp "$work/lvs.out" "./${report}"
 fi
 
 if grep -q "Circuits match uniquely" "$work/lvs.out" 2>/dev/null; then
   echo "PASS LVS: $cell"; exit 0
 fi
 echo "FAIL LVS: $cell"
-echo "  full report: ./$(basename "$layout" .spice).lvs.log"
+echo "  full report: ./${report}"
 echo
 echo "Usual causes, in order of likelihood:"
 echo "  * a missing or misspelled port label in the layout"
