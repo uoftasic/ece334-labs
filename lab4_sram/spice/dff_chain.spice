@@ -22,8 +22,14 @@ Vss vss 0 0
 Vsetq   setq   0 0
 Vresetq resetq 0 0
 
-Vcl cl 0 PULSE(0 1.8 0 0.5n 0.5n 'TCLK/2' 'TCLK')
-Vd  d1 0 PULSE(0 1.8 5n 0.5n 0.5n '2*TCLK' '4*TCLK')
+* Edge rates and the data delay are written as fractions of TCLK so that the
+* whole waveform scales when the clock is sped up. With them fixed at 0.5 ns,
+* a short period leaves the clock triangular and never reaching the rails, and
+* the frequency at which capture fails measures the stimulus rather than the
+* path. At the default TCLK = 20 ns these evaluate to the same 0.5 ns edges
+* and 5 ns data delay as before.
+Vcl cl 0 PULSE(0 1.8 0 'TCLK/40' 'TCLK/40' 'TCLK/2' 'TCLK')
+Vd  d1 0 PULSE(0 1.8 'TCLK/4' 'TCLK/40' 'TCLK/40' '2*TCLK' '4*TCLK')
 
 Xff1 d1 cl setq resetq q1 q1b vdd vss dff
 

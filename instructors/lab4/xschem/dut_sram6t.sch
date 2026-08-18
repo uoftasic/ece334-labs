@@ -6,7 +6,7 @@ S {}
 E {}
 T {Reference 6T cell. Sizing from Lab 4 P1:
   read   2.0 >= 2.7 * 0.7 = 1.89   OK
-  write  0.7 >= 1.2 * 0.5 = 0.60   OK} -380 -400 0 0 0.3 0.3 {}
+  write  0.7 >= 1.2 * 0.5 = 0.60   OK} -380 -230 0 0 0.3 0.3 {}
 C {devices/iopin.sym} -160 120 0 0 {name=p1 lab=bit}
 C {devices/iopin.sym} 500 120 0 0 {name=p2 lab=bit_b}
 C {devices/ipin.sym} -380 0 0 0 {name=p3 lab=word}

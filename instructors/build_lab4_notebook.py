@@ -232,7 +232,7 @@ print(f"f_max    = {f_max/1e6:8.0f} MHz")
 # Each point is a 200 ns transient through two flip-flops, so keep the list
 # short: bracket the calculated f_max above and add points until the answer
 # stops moving, rather than sweeping a fine grid from the start.
-periods = ["10n", "4n", "2.5n", "2n"]
+periods = ["8n", "4n", "2.5n", "2n"]
 
 # What fails is not that q2 holds the wrong value at some instant -- q2 always
 # lags q1 by a full clock cycle, so comparing the two at the same moment only

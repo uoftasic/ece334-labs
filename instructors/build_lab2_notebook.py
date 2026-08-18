@@ -210,7 +210,9 @@ def compare_at(cload):
         open(path, "w").write(deck)
         try:
             w = sim.run_deck(path, output="nand2_wave.raw", cwd=LAB)
-            out[label] = measure.prop_delay(w, "a", "out", vdd=VDD)[0]
+            # prop_delays returns (t_pHL, t_pLH); the falling output edge is the
+        # one the delay comparison in this lab is built on.
+        out[label] = measure.prop_delays(w, "a", "out", vdd=VDD)[0]
             out[label + "_wave"] = w
         finally:
             os.remove(path)

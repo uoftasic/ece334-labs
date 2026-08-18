@@ -90,9 +90,12 @@ def access(name_, x, storage, bitline, w, l, label_ends=True):
 
 
 def build_sram6t_solution(wload="0.5", wacc="0.7", wdrv="2.0", l="0.5"):
+    # The title is anchored INSIDE the geometry, not above it: xschem's --pdf
+    # page fit computes its bounding box from symbols and wires only, so a
+    # title floating above the drawing is silently cropped in the figure.
     body = ["""T {Reference 6T cell. Sizing from Lab 4 P1:
   read   2.0 >= 2.7 * 0.7 = 1.89   OK
-  write  0.7 >= 1.2 * 0.5 = 0.60   OK} -380 -400 0 0 0.3 0.3 {}"""]
+  write  0.7 >= 1.2 * 0.5 = 0.60   OK} -380 -230 0 0 0.3 0.3 {}"""]
     body += ports([(n, d, x, y) for (n, d, _, _), (x, y)
                    in zip(SRAM6T_PINS, SRAM6T_PORT_XY)])
     # Cross-coupled pair: each inverter's input is the other's output. That is
