@@ -1,11 +1,117 @@
-* Lab 4 L7 — SRAM write stability violation (weaken access or strengthen load PMOS)
+* ECE334 Lab 4 L7 -- 6T SRAM with the WRITE STABILITY condition violated
+*
+* The load PMOS is grown to 6.0 and the access NMOS shrunk to 0.36, so
+* W(access) = 0.36 is far below the 1.2 * W(load) = 7.2 the condition
+* demands. The access device can no longer overpower the load holding the
+* internal node high, so the write never takes: a stays near 0.075 V where
+* the nominal cell reaches 1.8 V.
+*
+* Note that violating the ratio only slightly is not enough. Shrinking the
+* access device alone, or growing the load alone, still writes -- the PMOS
+* is about three times weaker than an NMOS of the same width, so the ratio
+* has real margin in it.
+*
+* Original header follows.
+*
+* ECE334 Lab 4 -- 6T SRAM cell: WRITE '1' followed by READ
+*
+*                  vdd            vdd
+*                   |              |
+*             P3 ---+---.    .-----+--- P4          precharge devices
+*                        |    |
+*      bit -------[N2]---A    A_b---[N4]------- bit_b
+*                        |    |
+*        P1 vdd->A (gate A_b) ; P2 vdd->A_b (gate A)      cross-coupled
+*        N1 A->vss (gate A_b) ; N3 A_b->vss (gate A)      inverters
+*
+*      write drivers: N5(write)+N7(data_b) pull bit down
+*                     N6(write)+N8(data)   pull bit_b down
+*
+* Sizing satisfies both stability conditions from P1:
+*   read  : W(driver) >= 2.7 * W(access)   2.0 >= 2.7*0.7 = 1.89   OK
+*   write : W(access) >= 1.2 * W(load)     0.7 >= 1.2*0.5 = 0.60   OK
+*
+* Override a width on the command line to break one of them deliberately:
+*   ngspice -b sram6t.spice                       nominal
+*   sed 's/WDRV=2.0/WDRV=0.6/'  -> read fails     (L6)
+*   sed 's/WACC=0.7/WACC=0.5/'  -> write fails    (L7)
+
 .lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
-* .include sram6t_write_fail.spice
+
+.param WLOAD=6.0      $ P1, P2   load -- DELIBERATELY TOO LARGE
+.param WACC=0.36      $ N2, N4   access -- DELIBERATELY TOO SMALL
+.param WDRV=2.0       $ N1, N3   driver
+.param WPER=8.0       $ P3-P4, N5-N8  periphery
+.param LL=0.5
+.param CBIT=1p
+
 Vdd vdd 0 1.8
 Vss vss 0 0
-.ic v(A)=0
-.tran 10p 100n
+
+* ---- stimulus, from the handout's Figure 3 (times in ns) ------------------
+* precharge  high 1-9 and 20-29     (high = precharging)
+* word       high 10-19 and 29-50
+* write      high 10-19
+* data       held at VDD, so the write stores a 1
+Vpre  pre   0 PWL(0 0  1n 0  1.05n 1.8  9n 1.8  9.05n 0  20n 0
++                 20.05n 1.8  29n 1.8  29.05n 0  50n 0)
+Vword word  0 PWL(0 0  10n 0  10.05n 1.8  19n 1.8  19.05n 0  29n 0
++                 29.05n 1.8  50n 1.8)
+Vwr   write 0 PWL(0 0  10n 0  10.05n 1.8  19n 1.8  19.05n 0  50n 0)
+Vdata data  0 1.8
+
+* ---- precharge, gated by the inverted precharge signal --------------------
+XIP pre_b pre vdd vdd sky130_fd_pr__pfet_01v8 W={WPER} L={LL}
+XIN pre_b pre vss vss sky130_fd_pr__nfet_01v8 W={WPER/3} L={LL}
+XP3 bit   pre_b vdd vdd sky130_fd_pr__pfet_01v8 W={WPER} L={LL}
+XP4 bit_b pre_b vdd vdd sky130_fd_pr__pfet_01v8 W={WPER} L={LL}
+
+* ---- the cell ------------------------------------------------------------
+XP1 a   a_b vdd vdd sky130_fd_pr__pfet_01v8 W={WLOAD} L={LL}
+XN1 a   a_b vss vss sky130_fd_pr__nfet_01v8 W={WDRV}  L={LL}
+XP2 a_b a   vdd vdd sky130_fd_pr__pfet_01v8 W={WLOAD} L={LL}
+XN3 a_b a   vss vss sky130_fd_pr__nfet_01v8 W={WDRV}  L={LL}
+XN2 bit   word a   vss sky130_fd_pr__nfet_01v8 W={WACC} L={LL}
+XN4 bit_b word a_b vss sky130_fd_pr__nfet_01v8 W={WACC} L={LL}
+
+* ---- write drivers -------------------------------------------------------
+XDP data_b data vdd vdd sky130_fd_pr__pfet_01v8 W={WPER} L={LL}
+XDN data_b data vss vss sky130_fd_pr__nfet_01v8 W={WPER/3} L={LL}
+XN5 bit   write n5d vss sky130_fd_pr__nfet_01v8 W={WPER} L={LL}
+XN7 n5d   data_b vss vss sky130_fd_pr__nfet_01v8 W={WPER} L={LL}
+XN6 bit_b write n6d vss sky130_fd_pr__nfet_01v8 W={WPER} L={LL}
+XN8 n6d   data  vss vss sky130_fd_pr__nfet_01v8 W={WPER} L={LL}
+
+* ---- bit line capacitance ------------------------------------------------
+Cb  bit   vss {CBIT}
+Cbb bit_b vss {CBIT}
+
+* The cell has two stable states; tell the simulator which one to start in,
+* or the DC solution is arbitrary and the write has nothing to overwrite.
+.ic v(a)=0 v(a_b)=1.8
+
+.tran 10p 50n
+
 .control
 run
+set filetype=ascii
+write sram6t_write_fail.raw v(pre) v(word) v(write) v(bit) v(bit_b) v(a) v(a_b)
+
+echo "--- internal nodes after the write (t = 19 ns) ---"
+meas tran a_after_write   FIND v(a)   AT=19n
+meas tran ab_after_write  FIND v(a_b) AT=19n
+
+echo "--- read disturb: how far does the LOW node rise while reading? ---"
+* After writing a 1, a is high and a_b is low, so a_b is the node at risk.
+meas tran ab_read_peak MAX v(a_b) FROM=29.1n TO=50n
+
+echo "--- read time: word rising to 200 mV of bit-line separation ---"
+* bit_b is the side tied to the low internal node, so it is the one that falls.
+* Measure from the SECOND word rise (the read) -- the first is the write, where
+* the driver pulls bit_b down and the bit lines separate for a different reason.
+let dbit = v(bit) - v(bit_b)
+* RISE=2 on both: the first crossing belongs to the write phase, where the
+* driver separates the bit lines for a different reason.
+meas tran t_read TRIG v(word) VAL=0.9 RISE=2 TARG dbit VAL=0.2 RISE=2
 .endc
 .end

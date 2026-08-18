@@ -1,0 +1,55 @@
+* ECE334 Lab 4 L1/L2 -- D flip-flop setup time and clock-to-Q delay
+*
+* Setup time is found by sweeping the data edge toward the clock edge until the
+* flip-flop stops capturing. This deck places ONE data transition before ONE
+* rising clock edge, separated by DSKEW, and reports the captured value.
+*
+*   DSKEW large  -> data is stable well before the edge, capture succeeds
+*   DSKEW small  -> data arrives too late, capture fails
+*
+* Sweep DSKEW and find the smallest value that still captures. That is t_setup.
+*
+* t_PCQ is the delay from the clock's 50 % point to Q's 50 % point, measured on
+* a cycle that does capture.
+*
+*   ngspice -b dff_char.spice
+* or, to sweep:
+*   for d in 2000 1500 1000 700 500 400 300 200 150 100; do
+*     sed "s/^.param DSKEW=.*/.param DSKEW=${d}p/" dff_char.spice > /tmp/s.spice
+*     ngspice -b /tmp/s.spice | grep -E "qfinal|tpcq"
+*   done
+
+.lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+.include dff.spice
+
+.param DSKEW=2000p
+.param TCLK=40n
+.param TEDGE=20n          $ the rising clock edge under test
+
+Vdd vdd 0 1.8
+Vss vss 0 0
+Vsetq   setq   0 0
+Vresetq resetq 0 0
+
+* One rising clock edge at TEDGE.
+Vcl cl 0 PULSE(0 1.8 'TEDGE' 0.5n 0.5n 10n 'TCLK')
+
+* Data goes 0 -> 1 exactly DSKEW before that clock edge.
+Vd data 0 PULSE(0 1.8 'TEDGE-DSKEW' 0.5n 0.5n 30n 'TCLK')
+
+Xdff data cl setq resetq q q_b vdd vss dff
+
+* Start from a known state so the first capture is meaningful.
+.ic v(q)=0
+
+.tran 5p 45n
+
+.control
+run
+set filetype=ascii
+write dff_char.raw v(cl) v(data) v(q)
+* Q well after the edge: 1.8 means the new data was captured, 0 means it was not.
+meas tran qfinal FIND v(q) AT=38n
+meas tran tpcq TRIG v(cl) VAL=0.9 RISE=1 TARG v(q) VAL=0.9 RISE=1
+.endc
+.end

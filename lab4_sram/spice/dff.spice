@@ -1,0 +1,80 @@
+** sch_path: /tmp/l4/wrap.sch
+**.subckt wrap
+x1 data cl setq resetq q q_b vdd vss dff
+**.ends
+
+* expanding   symbol:  dff.sym # of pins=8
+** sym_path: /foss/designs/common/xschem/dff.sym
+** sch_path: /foss/designs/common/xschem/dff.sch
+.subckt dff data cl setq resetq q q_b vdd vss
+*.ipin data
+*.ipin cl
+*.ipin setq
+*.ipin resetq
+*.opin q
+*.opin q_b
+*.iopin vdd
+*.iopin vss
+xclk cl cl_b vdd vss inv
+xtg1 data m1 cl_b vdd vss tgate
+xna m1 setq m2 vdd vss nor2
+xnb m2 resetq m3 vdd vss nor2
+xtg2 m3 m1 cl vdd vss tgate
+xtg3 m3 s1 cl vdd vss tgate
+xnc s1 setq q_b vdd vss nor2
+xnd q_b resetq q vdd vss nor2
+xtg4 q s1 cl_b vdd vss tgate
+.ends
+
+
+* expanding   symbol:  inv.sym # of pins=4
+** sym_path: /foss/designs/common/xschem/inv.sym
+** sch_path: /foss/designs/common/xschem/inv.sch
+.subckt inv in out vdd vss
+*.ipin in
+*.opin out
+*.iopin vdd
+*.iopin vss
+XM2 out in vdd vdd sky130_fd_pr__pfet_01v8 L=0.5 W=3 nf=1 ad=0.87 as=0.87 pd=6.58 ps=6.58 nrd=0.0966666666666667
++ nrs=0.0966666666666667 sa=0 sb=0 sd=0 mult=1
+XM1 out in vss vss sky130_fd_pr__nfet_01v8 L=0.5 W=1 nf=1 ad=0.29 as=0.29 pd=2.58 ps=2.58 nrd=0.29 nrs=0.29 sa=0 sb=0 sd=0 mult=1
+.ends
+
+
+* expanding   symbol:  tgate.sym # of pins=5
+** sym_path: /foss/designs/common/xschem/tgate.sym
+** sch_path: /foss/designs/common/xschem/tgate.sch
+.subckt tgate in out ctrl vdd vss
+*.ipin in
+*.opin out
+*.ipin ctrl
+*.iopin vdd
+*.iopin vss
+XMP in ctrl_b out vdd sky130_fd_pr__pfet_01v8 L=0.5 W=9 nf=1 ad=2.61 as=2.61 pd=18.58 ps=18.58 nrd=0.0322222222222222
++ nrs=0.0322222222222222 sa=0 sb=0 sd=0 mult=1
+XMN in ctrl out vss sky130_fd_pr__nfet_01v8 L=0.5 W=3 nf=1 ad=0.87 as=0.87 pd=6.58 ps=6.58 nrd=0.0966666666666667
++ nrs=0.0966666666666667 sa=0 sb=0 sd=0 mult=1
+xinv ctrl ctrl_b vdd vss inv
+.ends
+
+
+* expanding   symbol:  nor2.sym # of pins=5
+** sym_path: /foss/designs/common/xschem/nor2.sym
+** sch_path: /foss/designs/common/xschem/nor2.sch
+.subckt nor2 a b out vdd vss
+*.ipin a
+*.ipin b
+*.opin out
+*.iopin vdd
+*.iopin vss
+XMPA net1 a vdd vdd sky130_fd_pr__pfet_01v8 L=0.5 W=18 nf=1 ad=5.22 as=5.22 pd=36.58 ps=36.58 nrd=0.0161111111111111
++ nrs=0.0161111111111111 sa=0 sb=0 sd=0 mult=1
+XMPB out b net1 vdd sky130_fd_pr__pfet_01v8 L=0.5 W=18 nf=1 ad=5.22 as=5.22 pd=36.58 ps=36.58 nrd=0.0161111111111111
++ nrs=0.0161111111111111 sa=0 sb=0 sd=0 mult=1
+XMNA out a vss vss sky130_fd_pr__nfet_01v8 L=0.5 W=3 nf=1 ad=0.87 as=0.87 pd=6.58 ps=6.58 nrd=0.0966666666666667
++ nrs=0.0966666666666667 sa=0 sb=0 sd=0 mult=1
+XMNB out b vss vss sky130_fd_pr__nfet_01v8 L=0.5 W=3 nf=1 ad=0.87 as=0.87 pd=6.58 ps=6.58 nrd=0.0966666666666667
++ nrs=0.0966666666666667 sa=0 sb=0 sd=0 mult=1
+.ends
+
+.end

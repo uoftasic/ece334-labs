@@ -1,0 +1,60 @@
+* ECE334 Lab 4 L3 -- two flip-flops with four inverters between them
+*
+*   DFF1 -> inv -> inv -> inv -> inv -> DFF2
+*
+* The maximum clock frequency of this path is
+*
+*   f_max = 1 / ( t_PCQ + t_logic + t_setup )
+*
+* Measure t_logic here, take t_PCQ and t_setup from L1 and L2, then raise the
+* clock frequency in simulation until DFF2 stops capturing and compare.
+*
+*   ngspice -b dff_chain.spice
+
+.lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+.include dff.spice
+
+.param TCLK=20n
+.param WN=1 WP=3 LL=0.5
+
+Vdd vdd 0 1.8
+Vss vss 0 0
+Vsetq   setq   0 0
+Vresetq resetq 0 0
+
+Vcl cl 0 PULSE(0 1.8 0 0.5n 0.5n 'TCLK/2' 'TCLK')
+Vd  d1 0 PULSE(0 1.8 5n 0.5n 0.5n '2*TCLK' '4*TCLK')
+
+Xff1 d1 cl setq resetq q1 q1b vdd vss dff
+
+* four identical unit inverters
+.subckt uinv a y vdd vss
+XP y a vdd vdd sky130_fd_pr__pfet_01v8 W={WP} L={LL}
++ ad='0.29*WP' as='0.29*WP' pd='2*(WP+0.29)' ps='2*(WP+0.29)'
+XN y a vss vss sky130_fd_pr__nfet_01v8 W={WN} L={LL}
++ ad='0.29*WN' as='0.29*WN' pd='2*(WN+0.29)' ps='2*(WN+0.29)'
+.ends
+Xi1 q1 n1 vdd vss uinv
+Xi2 n1 n2 vdd vss uinv
+Xi3 n2 n3 vdd vss uinv
+Xi4 n3 d2 vdd vss uinv
+
+Xff2 d2 cl setq resetq q2 q2b vdd vss dff
+
+.ic v(q1)=0 v(q2)=0
+.tran 10p 200n
+
+.control
+run
+set filetype=ascii
+write dff_chain.raw v(cl) v(d1) v(q1) v(d2) v(q2)
+echo "--- t_logic: four inverters, q1 to d2 ---"
+meas tran tlogic_r TRIG v(q1) VAL=0.9 RISE=1 TARG v(d2) VAL=0.9 RISE=1
+* d2 carries an extra early edge from the .ic settling, so match the second
+* falling crossing rather than the first.
+meas tran tlogic_f TRIG v(q1) VAL=0.9 FALL=1 TARG v(d2) VAL=0.9 FALL=2
+echo "--- does the second stage still track the first? ---"
+meas tran q1_late FIND v(q1) AT=99n
+meas tran q2_late FIND v(q2) AT=99n
+.endc
+.end
