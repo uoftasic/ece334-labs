@@ -20,7 +20,7 @@
 *   done
 
 .lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
-.include dff.spice
+.include include/dff.spice
 
 .param DSKEW=2000p
 .param TCLK=40n

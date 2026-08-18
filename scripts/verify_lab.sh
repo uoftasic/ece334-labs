@@ -68,6 +68,11 @@ if [ -d "$LABDIR/spice" ]; then
   for deck in "$LABDIR"/spice/*.spice; do
     [ -e "$deck" ] || continue
     name="$(basename "$deck")"
+    # Skip include-only netlists: a file with no analysis statement is a
+    # subcircuit library, not a deck, and ngspice exits non-zero on it.
+    if ! grep -qE '^[[:space:]]*\.(tran|dc|ac|op|noise)' "$deck"; then
+      echo "skip include-only: $name"; continue
+    fi
     if (cd "$LABDIR/spice" && timeout 300 ngspice -b "$name" >"$work/$name.log" 2>&1); then
       echo "ok   simulate: $name"
     else

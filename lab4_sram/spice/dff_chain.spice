@@ -12,7 +12,7 @@
 *   ngspice -b dff_chain.spice
 
 .lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
-.include dff.spice
+.include include/dff.spice
 
 .param TCLK=20n
 .param WN=1 WP=3 LL=0.5
