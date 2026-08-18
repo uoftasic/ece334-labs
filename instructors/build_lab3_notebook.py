@@ -90,7 +90,7 @@ print(f"Req_p = {Req_p/1e3:6.2f} kOhm    t_rise = {tr_hand*1e12:6.0f} ps")
 inv = sim.run_deck("spice/unit_inv.spice", output="unit_inv.raw")
 
 tr_sim, tf_sim = measure.edges_10_90(inv, "out", vdd=VDD)
-tphl, tplh = measure.prop_delay(inv, "in", "out", vdd=VDD)
+tphl, tplh = measure.prop_delays(inv, "in", "out", vdd=VDD)
 
 print(f"t_rise = {tr_sim*1e12:6.0f} ps   (hand {tr_hand*1e12:.0f} ps)")
 print(f"t_fall = {tf_sim*1e12:6.0f} ps   (hand {tf_hand*1e12:.0f} ps)")

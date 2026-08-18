@@ -76,6 +76,36 @@ def prop_delay(wave, vin, vout, vdd):
     return float(abs(to - ti))
 
 
+def prop_delays(wave, vin, vout, vdd):
+    """``(t_pHL, t_pLH)``: 50 % input crossing to the output crossing it causes.
+
+    Named for what the OUTPUT does, which is the convention the labs use:
+    ``t_pHL`` is the delay to the output's falling edge and ``t_pLH`` to its
+    rising edge. Either is ``None`` if that edge does not occur.
+
+    :func:`prop_delay` returns the first edge only, whichever way it goes; use
+    this when you need both, as Labs 2 and 3 do.
+    """
+    half = vdd / 2.0
+    t = wave.x
+    xi, _ = _crossings(t, wave[vin], half)
+    xo, do = _crossings(t, wave[vout], half)
+    if xi.size == 0 or xo.size == 0:
+        raise ValueError("no 50% crossing found on input and/or output")
+
+    def first(direction):
+        for to, d in zip(xo, do):
+            if d != direction:
+                continue
+            # The input crossing that caused it is the last one before it.
+            before = xi[xi <= to]
+            if before.size:
+                return float(to - before[-1])
+        return None
+
+    return first(-1), first(+1)
+
+
 def extract_square_law(vgs, idd, wl, vmin, vmax):
     """Extract K_P and V_t from a diode-connected device sweep.
 
