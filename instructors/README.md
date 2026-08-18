@@ -78,6 +78,29 @@ Lays the reference solutions over a scratch copy of the lab and runs the full
 netlist to simulate chain. `verify_lab.sh` on a student tree is *expected* to
 report "the DUT has not been built yet" -- the stubs ship empty on purpose.
 
+## Launchers
+
+Launchers fire only when **the selection is exactly one object** and **the
+pointer did not move between button press and release**. Both conditions fail
+silently. Measured on this build, three attempts each:
+
+| gesture | result |
+|---|---|
+| Ctrl-click, pointer perfectly still | fires |
+| Ctrl-click, pointer drifts 3 px | **does nothing** |
+| click to select, then `Ctrl-H` | fires, even after a sloppy click |
+| anything else also selected, then `Ctrl-H` | **does nothing** |
+
+A hand on a mouse drifts more than 3 px, so XSchem's documented Ctrl-click
+misses most of the time. Every testbench therefore carries a note telling
+students to click the arrow and press `Ctrl-H`, and the manuals lead with the
+menubar's Netlist and Simulate buttons, which have no such conditions.
+
+The relevant source is `xschem/src/callback.c` (the `state == (Button1Mask |
+ControlMask) && xctx->mouse_moved == 0` test in `handle_button_release`) and
+`xschem/src/actions.c` (`launcher()` returns immediately unless
+`xctx->lastsel == 1`).
+
 ## Schematic figures
 
     figures/export_schematic.sh <cell.sch> <out.png> [density]

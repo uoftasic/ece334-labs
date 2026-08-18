@@ -31,3 +31,7 @@ N 100 -50 100 -110 {lab=g}
 C {devices/vsource.sym} 320 60 0 0 {name=Vsweep value=0}
 C {devices/lab_pin.sym} 320 30 0 0 {name=l_vs lab=s}
 C {devices/gnd.sym} 320 90 0 0 {name=g2 lab=0}
+T {Launchers: click the arrow once, then press Ctrl-H.
+Ctrl-clicking one usually misses: it fires only if the pointer
+does not move at all between press and release. The menubar's
+Netlist and Simulate buttons do the same thing and always work.} -630 205 0 0 0.25 0.25 {}

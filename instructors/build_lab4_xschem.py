@@ -286,6 +286,10 @@ Writes sram6t_tb.raw. Open lab4.ipynb to analyse it.} %d -1260 0 0 0.4 0.4 {}"""
              'C {devices/launcher.sym} 700 -240 0 0 {name=h2 descr="Run analysis notebook"\n'
              'tclcommand="exec sh -c {cd /foss/designs/lab4_sram && jupyter nbconvert '
              '--to notebook --execute --inplace lab4.ipynb} &"}']
+    body += ['''T {Launchers: click the arrow once, then press Ctrl-H.
+Ctrl-clicking one usually misses: it fires only if the pointer
+does not move at all between press and release. The menubar's
+Netlist and Simulate buttons do the same thing and always work.} 690 -195 0 0 0.25 0.25 {}''']
     return HDR + "\n".join(body) + "\n"
 
 

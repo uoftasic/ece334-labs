@@ -1,0 +1,33 @@
+* ECE334 Lab 0 -- a CMOS inverter, as a worked example for the notebook
+*
+* This is the same cell you draw in L1.3, written out as a plain SPICE deck so
+* that lab0.ipynb has something to run before your own schematic is finished.
+* Read it: every testbench in this course has these same five parts.
+*
+*   ngspice -b inv_demo.spice
+
+* 1. the device models
+.lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* 2. the supplies
+Vdd vdd 0 1.8
+Vss vss 0 0
+
+* 3. the stimulus: a square wave into the input
+Vin in 0 PULSE(0 1.8 2n 0.1n 0.1n 8n 16n)
+
+* 4. the circuit. W and L are UNITLESS MICRONS -- a 'u' suffix lands outside
+*    every model bin and ngspice reports "could not find a valid modelname".
+XP out in vdd vdd sky130_fd_pr__pfet_01v8 W=3 L=0.5
+XN out in vss vss sky130_fd_pr__nfet_01v8 W=1 L=0.5
+CL out vss 0.2p
+
+* 5. the analysis, and what to write out
+.tran 1p 20n
+
+.control
+run
+set filetype=ascii
+write inv_demo.raw v(in) v(out)
+.endc
+.end

@@ -57,3 +57,7 @@ C {devices/gnd.sym} 80 190 0 0 {name=g4 lab=0}
 C {devices/vsource.sym} 240 160 0 0 {name=Vss value=0}
 C {devices/lab_pin.sym} 240 130 0 0 {name=lv5 lab=vss}
 C {devices/gnd.sym} 240 190 0 0 {name=g5 lab=0}
+T {Launchers: click the arrow once, then press Ctrl-H.
+Ctrl-clicking one usually misses: it fires only if the pointer
+does not move at all between press and release. The menubar's
+Netlist and Simulate buttons do the same thing and always work.} -830 205 0 0 0.25 0.25 {}

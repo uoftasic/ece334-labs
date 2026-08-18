@@ -58,3 +58,7 @@ C {devices/gnd.sym} 620 290 0 0 {name=g2 lab=0}
 C {devices/vsource.sym} 800 260 0 0 {name=Vss value=0}
 C {devices/lab_pin.sym} 800 230 0 0 {name=l_vss lab=vss}
 C {devices/gnd.sym} 800 290 0 0 {name=g3 lab=0}
+T {Launchers: click the arrow once, then press Ctrl-H.
+Ctrl-clicking one usually misses: it fires only if the pointer
+does not move at all between press and release. The menubar's
+Netlist and Simulate buttons do the same thing and always work.} -910 245 0 0 0.25 0.25 {}
