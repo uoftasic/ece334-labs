@@ -53,9 +53,11 @@ from ece334lib import measure, plot, sim
 VDD = 1.8
 %matplotlib inline
 
-# Your four extracted parameters from Lab 1 P2. Use YOUR numbers, not these.
-Vtn, KPn = 0.75, 130e-6      # V, A/V^2
-Vtp, KPp = 0.85, 45e-6
+# Your four extracted parameters from Lab 1 P2. Replace these with YOUR
+# numbers -- the values below are what the reference build extracted, and are
+# here only so the cells run before you have substituted your own.
+Vtn, KPn = 0.461, 177.3e-6      # V, A/V^2
+Vtp, KPp = 0.992, 58.4e-6
 """),
 
     # ---------------------------------------------------------------- P1/L1
@@ -216,13 +218,26 @@ def rising_edges(wave, sig, level=VDD/2, after=0.0):
     return t[idx][t[idx] >= after]
 
 edges = rising_edges(d, "cl", after=20e-9)
-print(f"{'clock edge':>12} {'DATA before':>12} {'Q after':>9}  captured")
-for te in edges[:8]:
+print(f"{'clock edge':>12} {'SETQ':>5} {'RESETQ':>7} {'DATA before':>12} "
+      f"{'Q after':>9}   what happened")
+for te in edges[:12]:
+    setq   = float(np.interp(te, d.x, d["setq"]))   > VDD/2
+    resetq = float(np.interp(te, d.x, d["resetq"])) > VDD/2
     before = float(np.interp(te - 1e-9, d.x, d["data"]))
     after  = float(np.interp(te + 4e-9, d.x, d["q"]))
-    ok = (before > VDD/2) == (after > VDD/2)
-    print(f"{te*1e9:10.1f} ns {before:11.2f} V {after:8.2f} V  "
-          f"{'yes' if ok else 'NO'}")
+    # SETQ and RESETQ act through the NOR gates and override the data path
+    # entirely, so an edge inside either pulse is not a capture failure --
+    # it is the asynchronous input doing its job.
+    if setq:
+        note = "forced high by SETQ"
+    elif resetq:
+        note = "forced low by RESETQ"
+    elif (before > VDD/2) == (after > VDD/2):
+        note = "captured DATA"
+    else:
+        note = "MISSED -- investigate"
+    print(f"{te*1e9:10.1f} ns {str(setq):>5} {str(resetq):>7} {before:11.2f} V "
+          f"{after:8.2f} V   {note}")
 """),
     md("""
 ### Your truth table
