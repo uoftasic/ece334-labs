@@ -139,3 +139,50 @@ def noise_margins(wave, vin, vout):
         "NML": vil - vol,
         "VM": vtc_trip(wave, vin, vout),
     }
+
+
+def tau_from_step(wave, sig, v_final=None):
+    """Time constant of a step response: the 63.2 % crossing time.
+
+    Assumes the step is applied at ``t = 0`` and ``sig`` moves monotonically
+    toward ``v_final``. ``v_final`` defaults to the last sample, which is only
+    correct if the response has settled inside the simulated window -- pass it
+    explicitly when it has not.
+    """
+    t = wave.x
+    y = wave[sig]
+    if v_final is None:
+        v_final = float(y[-1])
+    xs, dirs = _crossings(t, y, 0.632 * v_final)
+    want = 1 if v_final >= y[0] else -1
+    for x, d in zip(xs, dirs):
+        if d == want:
+            return float(x)
+    raise ValueError(
+        f"{sig!r} never reaches 63.2 % of {v_final:g} V "
+        f"(peak {float(np.max(y)):g} V) -- check v_final or extend .tran"
+    )
+
+
+def pulse_width(wave, sig, vdd, polarity="low"):
+    """50 %-to-50 % width of the first pulse on ``sig``.
+
+    ``polarity="low"`` measures a low-going pulse: the falling 50 % crossing to
+    the next rising one. This is what the pulse generator produces, because its
+    output stage is a NAND. ``polarity="high"`` measures a high-going pulse.
+    """
+    if polarity not in ("low", "high"):
+        raise ValueError(f"polarity must be 'low' or 'high', got {polarity!r}")
+    open_dir = 1 if polarity == "high" else -1
+    xs, dirs = _crossings(wave.x, wave[sig], 0.5 * vdd)
+    for i, d in enumerate(dirs):
+        if d != open_dir:
+            continue
+        for x2, d2 in zip(xs[i + 1:], dirs[i + 1:]):
+            if d2 == -open_dir:
+                return float(x2 - xs[i])
+        raise ValueError(
+            f"{sig!r} opens a {polarity}-going pulse at {xs[i]:g} s but never "
+            f"returns -- extend .tran past the closing edge"
+        )
+    raise ValueError(f"no {polarity}-going pulse found on {sig!r} at 50 % of {vdd} V")

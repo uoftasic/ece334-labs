@@ -91,3 +91,65 @@ def test_noise_margins_skew_with_trip_point():
     hi = measure.noise_margins(_symmetric_vtc(vm=0.7 * VDD), "in", "out")
     assert hi["NML"] > bal["NML"]
     assert hi["NMH"] < bal["NMH"]
+
+
+# --- tau_from_step -----------------------------------------------------------
+
+def test_tau_from_step_recovers_rc_time_constant():
+    # v = Vf*(1 - exp(-t/tau)); the 63.2 % crossing is t = tau.
+    tau, vf = 1e-9, 1.2
+    t = np.linspace(0, 10 * tau, 20001)
+    v = vf * (1 - np.exp(-t / tau))
+    w = _wave(time=t, **{"v(out)": v})
+    assert abs(measure.tau_from_step(w, "out") - tau) / tau < 0.02
+
+
+def test_tau_from_step_uses_explicit_final_value():
+    # A step that has not settled by the end of the window: the final sample is
+    # not the asymptote, so v_final must be supplied.
+    tau, vf = 1e-9, 1.2
+    t = np.linspace(0, 1.5 * tau, 5001)
+    v = vf * (1 - np.exp(-t / tau))
+    w = _wave(time=t, **{"v(out)": v})
+    assert abs(measure.tau_from_step(w, "out", v_final=vf) - tau) / tau < 0.02
+
+
+def test_tau_from_step_raises_when_never_reached():
+    t = np.linspace(0, 1e-9, 101)
+    w = _wave(time=t, **{"v(out)": np.zeros_like(t)})
+    try:
+        measure.tau_from_step(w, "out", v_final=1.2)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("expected ValueError for a signal that never rises")
+
+
+# --- pulse_width -------------------------------------------------------------
+
+def test_pulse_width_low_going():
+    # The pulse generator output is low-going (its last stage is a NAND).
+    t = np.linspace(0, 10e-9, 100001)
+    v = np.where((t >= 4e-9) & (t < 5.5e-9), 0.0, VDD)
+    w = _wave(time=t, **{"v(out)": v})
+    got = measure.pulse_width(w, "out", vdd=VDD, polarity="low")
+    assert abs(got - 1.5e-9) < 20e-12
+
+
+def test_pulse_width_high_going():
+    t = np.linspace(0, 10e-9, 100001)
+    v = np.where((t >= 2e-9) & (t < 2.8e-9), VDD, 0.0)
+    w = _wave(time=t, **{"v(out)": v})
+    got = measure.pulse_width(w, "out", vdd=VDD, polarity="high")
+    assert abs(got - 0.8e-9) < 20e-12
+
+
+def test_pulse_width_rejects_bad_polarity():
+    t = np.linspace(0, 1e-9, 101)
+    w = _wave(time=t, **{"v(out)": np.zeros_like(t)})
+    try:
+        measure.pulse_width(w, "out", vdd=VDD, polarity="sideways")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("expected ValueError for an invalid polarity")

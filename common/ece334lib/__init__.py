@@ -11,7 +11,8 @@ A deliberately small toolkit so lab notebooks read as intent, not plumbing:
 Modules
 -------
 waves    : load ngspice output (.raw / wrdata) into a numpy-backed ``Wave``
-measure  : digital metrics (edges, propagation delay, noise margins, trip point)
+measure  : digital metrics (edges, propagation delay, noise margins, trip
+           point, RC time constant, pulse width)
 sim      : run ngspice / netlist XSchem schematics; parameter sweeps
 plot     : a couple of matplotlib wrappers (transient, VTC)
 """
