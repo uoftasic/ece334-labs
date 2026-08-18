@@ -34,9 +34,22 @@ if [ -d "$LABDIR/xschem" ]; then
       grep 'IS MISSING' "$deck" | sed 's/^/    /'
       fail=1; continue
     fi
-    # Netlisting cleanly is not enough: a DUT whose schematic is an empty stub
-    # netlists without complaint and then fails at 'write' with "no writable
-    # vector found". Simulate the generated deck and insist it produces output.
+    # An unbuilt DUT netlists to a subcircuit with no contents. Whether that is
+    # caught later depends on whether the .control block happens to reference a
+    # net that no longer exists, so check for it directly.
+    empty="$(awk '
+      /^[.]subckt/ { name=$2; body=0; next }
+      /^[.]ends/   { if (name != "" && body == 0) print name; name=""; next }
+      { if (name != "" && $0 !~ /^[*]/ && $0 !~ /^[[:space:]]*$/ && $0 !~ /^[+]/) body++ }
+    ' "$deck")"
+    if [ -n "$empty" ]; then
+      echo "FAIL empty subcircuit(s) in $name: $(echo $empty | tr '\n' ' ')"
+      echo "     the DUT has not been built yet"
+      fail=1; continue
+    fi
+
+    # Netlisting cleanly is not enough either: simulate the generated deck and
+    # insist it runs without error.
     if ! (cd "$out" && timeout 300 ngspice -b "$name.spice" >sim.log 2>&1); then
       echo "FAIL simulate(netlisted): $name"; tail -12 "$out/sim.log" | sed 's/^/    /'
       fail=1; continue
