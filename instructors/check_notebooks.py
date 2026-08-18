@@ -31,6 +31,13 @@ def check(path):
     if missing:
         problems.append("  %d cells have no id field (nbformat 4.5 requires one)"
                         % len(missing))
+    # A student receives a blank report to fill in. Verify a notebook by
+    # executing it to a scratch copy (nbconvert --output), never --inplace,
+    # then regenerate the shipped file from its builder.
+    stored = sum(len(c.get("outputs", [])) for c in nb["cells"])
+    if stored:
+        problems.append("  %d stored outputs -- the shipped notebook must be "
+                        "unexecuted; regenerate it from its builder" % stored)
     return problems
 
 

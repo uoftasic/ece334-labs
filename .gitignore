@@ -36,3 +36,10 @@ plot.svg
 # the deck's relative .include paths still resolve. Killing a run mid-sweep
 # leaves one behind.
 .sweep-*/
+
+# Lab 2 exercise output. Drawing the layout IS the lab -- shipping the finished
+# cell would hand students the answer, which is exactly what the legacy handout
+# did wrong.
+lab2_layout/nand2.mag
+lab2_layout/nand2.*.spice
+lab2_layout/_compare_*.spice

@@ -62,5 +62,11 @@ if grep -q "Circuits match uniquely" "$work/lvs.out" 2>/dev/null; then
 fi
 echo "FAIL LVS: $cell"
 echo "  full report: ./$(basename "$layout" .spice).lvs.log"
+echo
+echo "Usual causes, in order of likelihood:"
+echo "  * a missing or misspelled port label in the layout"
+echo "  * a port present in one netlist but not the other"
+echo "  * inputs swapped -- netgen matches the topology and still reports a"
+echo "    pin mismatch, because a NAND is symmetric in its inputs"
 tail -20 "$work/netgen.log" | sed 's/^/    /'
 exit 1
