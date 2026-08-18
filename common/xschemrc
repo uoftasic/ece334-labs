@@ -1,13 +1,42 @@
-# Course-wide XSchem configuration (set XSCHEMRC to this file in .designinit)
-# SKY130 symbol library path — requires sak-pdk sky130A / open_pdks in container
+# Course-wide XSchem configuration.
+# Selected by XSCHEMRC in common/.designinit.
+#
+# This file layers course settings on top of the SKY130 PDK's own xschemrc.
+# Setting XSCHEMRC bypasses the PDK file, so we source it explicitly first --
+# that is what supplies the sky130 device symbols and the standard library path.
 
-set xschem_library    $::env(PDK_ROOT)/$::env(PDK)/libs.tech/xschem
-append XSCHEM_LIBRARY_PATH $xschem_library
-append XSCHEM_LIBRARY_PATH /foss/designs/common
+set pdk_root [expr {[info exists ::env(PDK_ROOT)] ? $::env(PDK_ROOT) : "/foss/pdks"}]
+set pdk      [expr {[info exists ::env(PDK)]      ? $::env(PDK)      : "sky130A"}]
+set pdk_xschemrc ${pdk_root}/${pdk}/libs.tech/xschem/xschemrc
 
-set netlist_dir       /foss/designs/.xschem/simulations
-set netlist_spgice    1
-set hdl_spgice        1
+if {[file exists $pdk_xschemrc]} {
+    source $pdk_xschemrc
+} else {
+    puts "ECE334 xschemrc: WARNING no PDK xschemrc at $pdk_xschemrc"
+    set XSCHEM_LIBRARY_PATH {}
+    append XSCHEM_LIBRARY_PATH :${XSCHEM_SHAREDIR}/xschem_library/devices
+    append XSCHEM_LIBRARY_PATH :${XSCHEM_SHAREDIR}/xschem_library
+}
 
-# ngspice as default SPICE simulator (IIC-OSIC-TOOLS)
-set netlist_command   {ngspice -b -o %o %n}
+# Course symbol libraries.  Entries MUST be colon-separated: appending without
+# the ":" concatenates paths into one unusable string, which makes every local
+# symbol netlist as "IS MISSING !!!!".
+append XSCHEM_LIBRARY_PATH :/foss/designs
+append XSCHEM_LIBRARY_PATH :/foss/designs/common
+
+# Each lab keeps its schematics and DUT symbols in <lab>/xschem.  Add them so a
+# testbench can refer to a sibling symbol by bare name (e.g. "dut_inv.sym").
+foreach labdir [lsort [glob -nocomplain -directory /foss/designs -type d {lab*}]] {
+    if {[file isdirectory ${labdir}/xschem]} {
+        append XSCHEM_LIBRARY_PATH :${labdir}/xschem
+    }
+}
+
+# Netlists land beside the schematic that produced them, so the launcher buttons
+# and the notebooks agree on where the .raw files appear.
+set netlist_dir .
+
+# ngspice is the course simulator.
+set netlist_type spice
+set netlist_command {ngspice -b -o %o %n}
+

@@ -7,7 +7,13 @@ if command -v sak-pdk >/dev/null 2>&1; then
 fi
 
 export DESIGNS=/foss/designs
-export XSCHEMRC="${DESIGNS}/common/xschemrc"
+
+# XSchem does not read an XSCHEMRC environment variable.  It sources, in order:
+#   $XSCHEM_SHAREDIR/xschemrc, then ./xschemrc, then ~/.xschem/xschemrc.
+# Installing a one-line shim in the last of those is what makes a bare `xschem`
+# pick up the course configuration from any directory.
+mkdir -p "${HOME}/.xschem"
+printf 'source %s/common/xschemrc\n' "${DESIGNS}" > "${HOME}/.xschem/xschemrc"
 
 # Course Python helper library: `import ece334lib` works from any lab notebook
 export PYTHONPATH="${DESIGNS}/common${PYTHONPATH:+:${PYTHONPATH}}"
