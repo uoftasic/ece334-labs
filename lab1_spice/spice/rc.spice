@@ -1,11 +1,33 @@
-* Lab 1 P1 - RC circuit (1.8 V)
-Vi n1 0 PULSE(0 1.8 0 0.2n 0.2n 3n 6n)
-R1 n1 n2 1k
-R2 n2 0 2k
-C1 n2 0 0.7p
+* ECE334 Lab 1 P1/L1 -- RC divider step response
+*
+* Vi --[R1]--+-- node "out"
+*            |
+*           [R2]   [C1]
+*            |      |
+*           gnd    gnd
+*
+* Final value:  Vout(inf) = 1.8 * R2/(R1+R2) = 1.200 V
+* Time constant: tau = (R1||R2)*C1 = 666.67 * 0.7p = 466.7 ps
+*   10-90 % rise: tau*ln(9)     = 1025.4 ps
+*   0-70 %  rise: tau*ln(1/0.3) =  561.9 ps   (the definition used in the
+*                                              legacy handout)
+*
+* Terminal route:  ngspice -b rc.spice
+* Schematic route: open xschem/rc_tb.sch and press "Netlist & Simulate"
+
+Vin  in  0   PULSE(0 1.8 0 0.2n 0.2n 3n 6n)
+R1   in  out 1k
+R2   out 0   2k
+C1   out 0   0.7p
+
 .tran 1p 15n
+
 .control
 run
-wrdata rc.txt v(n1) v(n2)
+set filetype=ascii
+write rc.raw v(in) v(out)
+meas tran vfinal FIND v(out) AT=2.9n
+meas tran trise  TRIG v(out) VAL=0.12 RISE=1 TARG v(out) VAL=1.08 RISE=1
+meas tran t70    TRIG v(in)  VAL=0.9  RISE=1 TARG v(out) VAL=0.84 RISE=1
 .endc
 .end

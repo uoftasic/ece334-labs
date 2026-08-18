@@ -126,3 +126,33 @@ def netlist_and_run(sch, output, fmt="raw", names=None):
         raise RuntimeError(f"xschem netlist failed:\n{proc.stdout}\n{proc.stderr}")
     return run_deck(os.path.join(cwd, netlist), output=output, fmt=fmt,
                     names=names, cwd=cwd)
+
+
+SIM_DIR = os.environ.get(
+    "ECE334_SIM_DIR", "/foss/designs/.xschem/simulations"
+)
+
+
+def raw(name, fmt="raw", names=None):
+    """Load a result file written by an XSchem launcher button.
+
+    The buttons netlist and simulate into one shared directory (``netlist_dir``
+    in ``common/xschemrc``), so a notebook refers to a result by bare filename
+    and does not care which directory XSchem was started from::
+
+        rc = sim.raw("rc_tb.raw")
+
+    Falls back to the current working directory, so a deck run by hand from a
+    lab folder still resolves.
+    """
+    if os.path.isabs(name) and os.path.exists(name):
+        return _read(name, fmt, names=names)
+    for base in (SIM_DIR, os.getcwd()):
+        path = os.path.join(base, name)
+        if os.path.exists(path):
+            return _read(path, fmt, names=names)
+    raise FileNotFoundError(
+        f"{name!r} not found in {SIM_DIR} or {os.getcwd()}. Press "
+        f"'Netlist & Simulate' in the testbench first, and check the schematic's "
+        f".control block writes exactly this filename."
+    )

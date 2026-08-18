@@ -1,0 +1,22 @@
+* ECE334 ngspice defaults.
+*
+* Selected by SPICE_USERINIT_DIR in common/.designinit.
+*
+* The container ships SPICE_USERINIT_DIR pointing at the IHP SG13G2 PDK, whose
+* .spiceinit preloads Verilog-A (OSDI) compact models from
+* $PDK_ROOT/$PDK/libs.tech/ngspice/osdi.  Once PDK=sky130A that path does not
+* exist -- SKY130 uses ngspice's built-in BSIM models and ships no OSDI -- so
+* every simulation printed eight "couldn't be loaded" errors before doing the
+* right thing anyway.  Pointing SPICE_USERINIT_DIR here removes the noise.
+
+* Match the machine, but leave a core for the GUI.
+set num_threads=4
+
+* HSPICE-compatible parsing: the SKY130 model files use "nf" alongside "W".
+set ngbehavior=hsa
+
+* Skip redundant model checks; noticeably faster on the SKY130 corner libraries.
+set ng_nomodcheck
+
+* SKY130 models behavioural resistors; keep their noise contribution.
+set enable_noisy_r
