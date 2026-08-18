@@ -53,8 +53,11 @@ meas tran tlogic_r TRIG v(q1) VAL=0.9 RISE=1 TARG v(d2) VAL=0.9 RISE=1
 * d2 carries an extra early edge from the .ic settling, so match the second
 * falling crossing rather than the first.
 meas tran tlogic_f TRIG v(q1) VAL=0.9 FALL=1 TARG v(d2) VAL=0.9 FALL=2
-echo "--- does the second stage still track the first? ---"
-meas tran q1_late FIND v(q1) AT=99n
-meas tran q2_late FIND v(q2) AT=99n
+echo "--- does the second stage still capture? ---"
+* Not "do q1 and q2 agree at some instant" -- q2 lags q1 by a whole clock
+* cycle by design, so that only measures the lag. When the path stops making
+* timing, q2 stops changing at all. Measure the swing.
+meas tran q1_swing PP v(q1) FROM=60n TO=200n
+meas tran q2_swing PP v(q2) FROM=60n TO=200n
 .endc
 .end

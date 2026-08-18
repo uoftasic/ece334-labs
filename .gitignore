@@ -28,3 +28,11 @@ docs/superpowers/
 .DS_Store
 *.swp
 *~
+plot.pdf
+plot.svg
+*.lvs.log
+.xschem/
+# sweep_param() writes a scratch deck beside the deck it is sweeping, so that
+# the deck's relative .include paths still resolve. Killing a run mid-sweep
+# leaves one behind.
+.sweep-*/
