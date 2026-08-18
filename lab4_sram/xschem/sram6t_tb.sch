@@ -83,3 +83,7 @@ C {devices/launcher.sym} 700 -300 0 0 {name=h1 descr="Netlist & Simulate"
 tclcommand="xschem save; xschem netlist; xschem simulate"}
 C {devices/launcher.sym} 700 -240 0 0 {name=h2 descr="Run analysis notebook"
 tclcommand="exec sh -c {cd /foss/designs/lab4_sram && jupyter nbconvert --to notebook --execute --inplace lab4.ipynb} &"}
+T {Launchers: click the arrow once, then press Ctrl-H.
+Ctrl-clicking one usually misses: it fires only if the pointer
+does not move at all between press and release. The menubar's
+Netlist and Simulate buttons do the same thing and always work.} 690 -195 0 0 0.25 0.25 {}

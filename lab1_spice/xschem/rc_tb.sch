@@ -37,3 +37,7 @@ C {devices/gnd.sym} 400 90 0 0 {name=g2 lab=0}
 C {devices/capa.sym} 580 60 0 0 {name=C1 value=0.7p m=1}
 C {devices/lab_pin.sym} 580 30 0 0 {name=l_c1a lab=out}
 C {devices/gnd.sym} 580 90 0 0 {name=g3 lab=0}
+T {Launchers: click the arrow once, then press Ctrl-H.
+Ctrl-clicking one usually misses: it fires only if the pointer
+does not move at all between press and release. The menubar's
+Netlist and Simulate buttons do the same thing and always work.} -630 235 0 0 0.25 0.25 {}

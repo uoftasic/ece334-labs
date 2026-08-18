@@ -47,3 +47,7 @@ C {devices/launcher.sym} -470 160 0 0 {name=h2 descr="Annotate OP"
 tclcommand="set show_hidden_texts 1; xschem annotate_op"}
 C {devices/launcher.sym} -470 200 0 0 {name=h3 descr="Run analysis notebook"
 tclcommand="exec sh -c {cd /foss/designs/lab1_spice && jupyter nbconvert --to notebook --execute --inplace lab1.ipynb} &"}
+T {Launchers: click the arrow once, then press Ctrl-H.
+Ctrl-clicking one usually misses: it fires only if the pointer
+does not move at all between press and release. The menubar's
+Netlist and Simulate buttons do the same thing and always work.} -480 245 0 0 0.25 0.25 {}
