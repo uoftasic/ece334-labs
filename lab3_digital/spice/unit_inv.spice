@@ -1,0 +1,33 @@
+* ECE334 Lab 3 P1/L1 -- unit inverter driving 0.3 pF
+*
+* Wn = 1, Wp = 3, L = 0.5. This is the reference the AOI21 in P2 is sized
+* against: the AOI21 must reach these edge rates while driving 1.5 pF, five
+* times the load.
+*
+*   ngspice -b unit_inv.spice
+
+.lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+.param CL=0.3p
+
+Vdd vdd 0 1.8
+Vss vss 0 0
+Vin in  0 PULSE(0 1.8 2n 0.1n 0.1n 10n 20n)
+
+XMP out in vdd vdd sky130_fd_pr__pfet_01v8 W=3 L=0.5
++ ad=0.87 as=0.87 pd=6.58 ps=6.58 nrd=0.0967 nrs=0.0967
+XMN out in vss vss sky130_fd_pr__nfet_01v8 W=1 L=0.5
++ ad=0.29 as=0.29 pd=2.58 ps=2.58 nrd=0.29 nrs=0.29
+CL out vss {CL}
+
+.tran 10p 40n
+
+.control
+run
+set filetype=ascii
+write unit_inv.raw v(in) v(out)
+meas tran trise TRIG v(out) VAL=0.18 RISE=1 TARG v(out) VAL=1.62 RISE=1
+meas tran tfall TRIG v(out) VAL=1.62 FALL=1 TARG v(out) VAL=0.18 FALL=1
+meas tran tphl  TRIG v(in)  VAL=0.9  RISE=1 TARG v(out) VAL=0.9  FALL=1
+meas tran tplh  TRIG v(in)  VAL=0.9  FALL=1 TARG v(out) VAL=0.9  RISE=1
+.endc
+.end
