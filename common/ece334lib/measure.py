@@ -148,6 +148,11 @@ def tau_from_step(wave, sig, v_final=None):
     toward ``v_final``. ``v_final`` defaults to the last sample, which is only
     correct if the response has settled inside the simulated window -- pass it
     explicitly when it has not.
+
+    The result is only as good as the step origin. A stimulus with a finite rise
+    time has no single origin, and the answer is then biased by roughly half the
+    input ramp. For a source with a non-zero ``tr``, prefer the reference-free
+    form ``edges_10_90(...)[0] / log(9)``.
     """
     t = wave.x
     y = wave[sig]
