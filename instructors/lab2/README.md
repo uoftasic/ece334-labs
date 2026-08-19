@@ -4,7 +4,7 @@
 |------|---------|
 | `build_nand2.tcl` | Builds the reference NAND2 layout from paint commands, runs DRC, declares ports, and writes both the LVS and PEX netlists |
 | `magic/nand2.mag` | The built layout. Figure source; **not** shipped to students |
-| `xschem/nand2_lvs.sch` | Wrapper that instantiates `nand2.sym` so XSchem emits a `.subckt` for netgen |
+| `../../lab2_layout/xschem/nand2_lvs.sch` | Wrapper that instantiates `nand2.sym` so XSchem emits a `.subckt` for netgen. It ships **to students** -- without it they cannot run LVS at all -- so it lives in the lab, not here |
 
 Rebuild and re-verify:
 

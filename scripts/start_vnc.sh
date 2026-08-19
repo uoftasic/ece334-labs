@@ -20,7 +20,7 @@ echo "After start, open in your browser:"
 echo "  EDA desktop:        http://localhost:${HOST_PORT}/  (password: ${VNC_PW}, ${VNC_RESOLUTION})"
 echo "  (override resolution: VNC_RESOLUTION=1920x1080 ./scripts/start_vnc.sh)"
 echo ""
-echo "Lab manuals & cheatsheets are online: https://ece334.github.io/ece334-docs/"
+echo "Lab manuals & cheatsheets are online: https://uoftasic.com/ece334-docs/"
 echo ""
 echo "Confirm tag ${DOCKER_TAG} on: https://github.com/iic-jku/IIC-OSIC-TOOLS/releases"
 
