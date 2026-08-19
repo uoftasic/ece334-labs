@@ -16,7 +16,7 @@ echo Mount:    %REPO_ROOT% -^> /foss/designs
 echo.
 echo After start, open in your browser:
 echo   EDA desktop:        http://localhost:%HOST_PORT%/  (password: %VNC_PW%, %VNC_RESOLUTION%)
-echo   Lab manuals ^& cheatsheets are online: https://ece334.github.io/ece334-docs/
+echo   Lab manuals ^& cheatsheets are online: https://uoftasic.com/ece334-docs/
 
 docker pull %IMAGE%
 docker rm -f %CONTAINER_NAME% 2>nul
