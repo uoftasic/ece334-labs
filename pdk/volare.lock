@@ -1,13 +1,23 @@
 # SKY130 PDK pin for reproducibility (term-long lock)
 #
-# Before opening the course to students:
-#   1. In the container:  sak-pdk sky130A
-#   2. Record the installed open_pdks / volare build, e.g.:
-#        volare ls --pdk sky130  (if volare is installed)
-#   3. Replace the placeholder below with the pinned hash/tag.
+# Read from the running pilot container, which is the build every measurement
+# in the manuals and every reference notebook output was produced against:
+#
+#     $PDK_ROOT/sky130A/SOURCES        -> open_pdks <hash>
+#     $PDK_ROOT/ciel/sky130/versions/  -> <hash>
+#
+# The image ships `ciel`, volare's successor; either resolves the same build.
+# To reproduce this exact PDK in a fresh container:
+#
+#     ciel enable --pdk sky130 7b70722e33c03fcb5dabcf4d479fb0822d9251c9
+#
+# Re-pin only deliberately, between terms, and re-run
+# scripts/verify_solutions.sh for every lab afterwards: the reference numbers
+# printed in the manuals are tied to this build.
 #
 # See: https://github.com/fossi-foundation/volare
 
 PDK=sky130A
-VOLARE_BUILD=REPLACE_WITH_PINNED_HASH_AFTER_PILOT
+OPEN_PDKS=7b70722e33c03fcb5dabcf4d479fb0822d9251c9
+VOLARE_BUILD=7b70722e33c03fcb5dabcf4d479fb0822d9251c9
 IMAGE_TAG=2026.04

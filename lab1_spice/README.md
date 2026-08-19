@@ -2,7 +2,7 @@
 
 Work in this folder (mounted at `/foss/designs/lab1_spice` inside the container).
 
-**Lab manual:** https://ece334.github.io/ece334-docs/labs/lab1/
+**Lab manual:** https://uoftasic.com/ece334-docs/labs/lab1/
 
 ## What's here
 

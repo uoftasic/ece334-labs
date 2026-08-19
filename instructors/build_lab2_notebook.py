@@ -38,7 +38,7 @@ cells = [
 **Date:**
 
 This notebook is your lab report. Its sections match the manual:
-<https://uoftasic.github.io/ece334-docs/labs/lab2/>
+<https://uoftasic.com/ece334-docs/labs/lab2/>
 
 Unlike the other labs, most of what Lab 2 produces is tool output rather than
 waveforms. The cells below capture that output into the report, so run them

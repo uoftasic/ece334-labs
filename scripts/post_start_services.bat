@@ -7,7 +7,10 @@ if not defined VNC_PW set VNC_PW=abc123
 set SCRIPT_DIR=%~dp0
 
 echo Configuring %CONTAINER_NAME%...
-timeout /t 3 /nobreak >nul
+REM `timeout` needs a console handle and fails when stdin is redirected,
+REM which is what happens when this file is run from a script rather than
+REM double-clicked. ping is portable and needs no console.
+ping -n 4 127.0.0.1 >nul
 
 bash "%SCRIPT_DIR%configure_vnc_desktop.sh" 2>nul
 

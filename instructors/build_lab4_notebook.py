@@ -38,7 +38,7 @@ cells = [
 **Date:**
 
 This notebook is your lab report. Its sections match the manual:
-<https://uoftasic.github.io/ece334-docs/labs/lab4/>
+<https://uoftasic.com/ece334-docs/labs/lab4/>
 
 Before you start, in the container terminal:
 

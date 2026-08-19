@@ -48,3 +48,8 @@ lab2_layout/_compare_*.spice
 # labs on XSCHEM_LIBRARY_PATH; a killed run leaves one behind.
 lab0_solcheck/
 lab0_figures/
+
+# XSchem falls back to creating simulations/ beside the schematic whenever
+# netlist_dir is not set (which is what happens if the course xschemrc has not
+# been loaded). Never a source file.
+lab*/xschem/simulations/

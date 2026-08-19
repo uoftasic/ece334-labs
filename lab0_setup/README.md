@@ -1,7 +1,7 @@
 # Lab 0 — Introduction to XSchem and Magic
 
 Ungraded. Work through the manual:
-https://uoftasic.github.io/ece334-docs/labs/lab0/
+https://uoftasic.com/ece334-docs/labs/lab0/
 
 You build every file in this lab yourself; the folder starts almost empty on
 purpose. Save your work here:
