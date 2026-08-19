@@ -4,7 +4,7 @@ Your working copy. Clone it, start the container, and do the labs here; your
 edits stay in your clone.
 
 **Lab manuals, setup guide, and cheatsheets:**
-<https://uoftasic.github.io/ece334-docs/>
+<https://uoftasic.com/ece334-docs/>
 
 ## Quick start
 

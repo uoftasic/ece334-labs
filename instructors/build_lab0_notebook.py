@@ -38,7 +38,7 @@ you learn to drive it. Nothing here is marked. Work through it in the session,
 with a demonstrator in the room, so that the first time something breaks is not
 the night before Lab 1 is due.
 
-Manual: <https://uoftasic.github.io/ece334-docs/labs/lab0/>
+Manual: <https://uoftasic.com/ece334-docs/labs/lab0/>
 
 ## How a notebook works
 

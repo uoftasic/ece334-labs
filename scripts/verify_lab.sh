@@ -70,14 +70,43 @@ if [ -d "$LABDIR/spice" ]; then
     name="$(basename "$deck")"
     # Skip include-only netlists: a file with no analysis statement is a
     # subcircuit library, not a deck, and ngspice exits non-zero on it.
-    if ! grep -qE '^[[:space:]]*\.(tran|dc|ac|op|noise)' "$deck"; then
+    # An analysis can be a .tran card at the top level OR a bare `tran` inside
+    # a .control block -- decks that drive two analyses have to use the latter,
+    # and matching only the dotted form silently stops verifying them.
+    if ! grep -qE '^[[:space:]]*\.(tran|dc|ac|op|noise)' "$deck" \
+       && ! grep -qE '^[[:space:]]*(tran|dc|ac|op|noise)[[:space:]]' "$deck"; then
       echo "skip include-only: $name"; continue
     fi
-    if (cd "$LABDIR/spice" && timeout 300 ngspice -b "$name" >"$work/$name.log" 2>&1); then
-      echo "ok   simulate: $name"
-    else
+    if ! (cd "$LABDIR/spice" && timeout 300 ngspice -b "$name" >"$work/$name.log" 2>&1); then
       echo "FAIL simulate: $name"; tail -15 "$work/$name.log" | sed 's/^/    /'; fail=1
+      continue
     fi
+
+    # Exiting zero is not the same as producing the right data. A deck with two
+    # .control blocks is the specific way that goes wrong: `reset` restores the
+    # circuit to its FIRST analysis, so the second `run` repeats it and the
+    # second output file is a copy of the first. Catch it directly, by checking
+    # that the files the deck names are actually different from each other.
+    outs="$(grep -oE '^[[:space:]]*(wrdata|write)[[:space:]]+[^[:space:]]+' "$deck" \
+            | awk '{print $2}' | sort -u)"
+    n_out="$(echo "$outs" | grep -c . || true)"
+    if [ "$n_out" -gt 1 ]; then
+      dup=""
+      for a in $outs; do
+        for b in $outs; do
+          [ "$a" \< "$b" ] || continue
+          [ -f "$LABDIR/spice/$a" ] && [ -f "$LABDIR/spice/$b" ] || continue
+          cmp -s "$LABDIR/spice/$a" "$LABDIR/spice/$b" && dup="$a and $b"
+        done
+      done
+      if [ -n "$dup" ]; then
+        echo "FAIL identical outputs in $name: $dup"
+        echo "     the deck names two outputs and wrote the same data to both;"
+        echo "     check for a second .control block ($(grep -c '^[.]control' "$deck") found)"
+        fail=1; continue
+      fi
+    fi
+    echo "ok   simulate: $name"
   done
 fi
 

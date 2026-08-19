@@ -1,4 +1,16 @@
-* Lab 1 P2/L2 — CMOS inverter reference (hand-written; prefer xschem netlist when available)
+* Lab 1 P2/L2 -- CMOS inverter reference (hand-written; prefer the xschem
+* netlist when available)
+*
+* Both analyses are driven from ONE .control block. A deck with two of them,
+* and a .dc card sitting between, does not do what it looks like it does:
+* `reset` restores the circuit to its first analysis, so the second `run`
+* repeats the transient and the DC file comes out a byte-identical copy of it.
+* Inside one block, `reset` then `dc` selects the sweep explicitly.
+*
+*   ngspice -b inverter_tb.spice
+*     -> inv_tran.txt   time, v(vi), v(vo)
+*     -> inv_dc.txt     v(vi) swept 0..1.8, v(vi), v(vo)
+
 .lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt
 Vdd vdd 0 1.8
 Vgnd vss 0 0
@@ -6,15 +18,13 @@ Vi vi 0 PULSE(0 1.8 0 0.2n 0.2n 3n 6n)
 Xn vo vi vss vss sky130_fd_pr__nfet_01v8 W=1 L=0.5
 Xp vo vi vdd vdd sky130_fd_pr__pfet_01v8 W=3 L=0.5
 Cload vo vss 0.2p
-.tran 1p 15n
+
 .control
-run
+tran 1p 15n
 wrdata inv_tran.txt v(vi) v(vo)
-.endc
-.dc Vi 0 1.8 0.005
-.control
+
 reset
-run
+dc Vi 0 1.8 0.005
 wrdata inv_dc.txt v(vi) v(vo)
 .endc
 .end

@@ -38,7 +38,7 @@ cells = [
 **Date:**
 
 This notebook is your lab report. Its sections match the manual:
-<https://uoftasic.github.io/ece334-docs/labs/lab1/>
+<https://uoftasic.com/ece334-docs/labs/lab1/>
 
 For each section: fill in the hand-analysis cell with your own numbers, run the
 measurement cell, then write your comparison in the answer block. A section
