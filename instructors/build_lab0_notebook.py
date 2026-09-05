@@ -297,7 +297,7 @@ cancels its three-times-lower mobility. That reasoning is sound as far as it
 goes, and the measurement still comes out well above 1. So mobility and width
 are not the only things setting $R_{eq}$ — name one more quantity in
 
-$$R_{eq} = \frac{V_{DD}}{K_P\frac{W}{L}(V_{DD}-|V_t|)}$$
+$$R_{eq} = \\frac{V_{DD}}{K_P\\frac{W}{L}(V_{DD}-|V_t|)}$$
 
 that differs between an NMOS and a PMOS, and say which way it pushes. You
 measure it yourself in Lab 1. Being wrong for a stated reason is worth marks;

@@ -31,6 +31,17 @@ def check(path):
     if missing:
         problems.append("  %d cells have no id field (nbformat 4.5 requires one)"
                         % len(missing))
+    # A stray control character means a LaTeX escape was written into a
+    # non-raw Python string in the builder: \frac becomes a formfeed, \beta a
+    # backspace, and the formula renders as mangled text. Cheap to catch here,
+    # invisible in a diff.
+    for i, cell in enumerate(nb["cells"]):
+        src = "".join(cell.get("source", []))
+        ctrl = sorted({hex(ord(ch)) for ch in src if ord(ch) < 32 and ch not in "\n\t"})
+        if ctrl:
+            problems.append("  cell %d contains control characters %s -- check for an "
+                            "unescaped backslash in the builder" % (i, ", ".join(ctrl)))
+
     # A student receives a blank report to fill in. Verify a notebook by
     # executing it to a scratch copy (nbconvert --output), never --inplace,
     # then regenerate the shipped file from its builder.
