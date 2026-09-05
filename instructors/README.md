@@ -107,8 +107,8 @@ Two things the oracle CANNOT catch, both of which bit us on this uplift:
   directly; it never types what the manual tells a student to type. Lab 4's L1
   loop had never worked (it moved the deck to `/tmp` and broke its relative
   `.include`), and Lab 0's Magic recipe left 16 `li.5` violations while the text
-  told students to reach zero. Both were years old and only surfaced when an
-  agent walked the manuals line by line.
+  told students to reach zero. Both were years old and only surfaced when the
+  manuals were worked through line by line, typing exactly what they say.
 
 So: run the oracle for the numbers, and separately execute the manuals verbatim.
 
