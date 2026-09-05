@@ -2,7 +2,7 @@
 # Launch IIC-OSIC-TOOLS with noVNC (browser GUI). Works on Linux and macOS.
 set -euo pipefail
 
-DOCKER_TAG="${DOCKER_TAG:-2026.04}"
+DOCKER_TAG="${DOCKER_TAG:-2026.08}"
 IMAGE="hpretl/iic-osic-tools:${DOCKER_TAG}"
 CONTAINER_NAME="${CONTAINER_NAME:-ece334-osic}"
 VNC_PW="${VNC_PW:-abc123}"
@@ -33,6 +33,7 @@ docker run -d --name "${CONTAINER_NAME}" \
   --security-opt seccomp=unconfined \
   -p "${HOST_PORT}:80" \
   -e VNC_PW="${VNC_PW}" \
+  -e XKB_KEYBOARD_LAYOUT="${XKB_KEYBOARD_LAYOUT:-us}" \
   -e VNC_RESOLUTION="${VNC_RESOLUTION}" \
   -v "${REPO_ROOT}:/foss/designs" \
   -v "${REPO_ROOT}/docker/novnc-index.html:/usr/share/novnc/index.html:ro" \

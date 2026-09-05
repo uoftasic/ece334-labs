@@ -40,6 +40,20 @@ case "$sch" in
       echo "FAIL: unresolved symbols in $sch -- re-run .designinit" >&2
       grep 'IS MISSING' "$sch_net" >&2; exit 1
     fi
+    # XSchem writes the top level as a COMMENTED subcircuit:
+    #     **.subckt nand2_lvs
+    #     x1 a b out vdd vss nand2
+    #     **.ends
+    # netgen 1.5.318 (image 2026.04) ignored that block. netgen 1.5.323
+    # (image 2026.08) parses it, sees the requested cell instantiated at the
+    # top level, and dies with "Class <cell> is instanced inside of itself".
+    # Strip the block -- including the instance line inside it, which is the
+    # part that actually trips netgen -- before handing the netlist over.
+    # Verified to give "Circuits match uniquely" on both netgen versions.
+    awk '/^[*][*][.]subckt/ {skip=1; next}
+         /^[*][*][.]ends/   {skip=0; next}
+         !skip' "$sch_net" > "$sch_net.netgen"
+    sch_net="$sch_net.netgen"
     ;;
   *) sch_net="$sch" ;;
 esac

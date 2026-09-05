@@ -2,7 +2,7 @@
 # Launch IIC-OSIC-TOOLS with local X11 (Linux / macOS + XQuartz). Faster than noVNC.
 set -euo pipefail
 
-DOCKER_TAG="${DOCKER_TAG:-2026.04}"
+DOCKER_TAG="${DOCKER_TAG:-2026.08}"
 IMAGE="hpretl/iic-osic-tools:${DOCKER_TAG}"
 CONTAINER_NAME="${CONTAINER_NAME:-ece334-osic-x11}"
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"

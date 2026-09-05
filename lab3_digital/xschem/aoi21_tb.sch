@@ -4,7 +4,7 @@ V {}
 S {}
 E {}
 T {ECE334 Lab 3 - P2/L2  AOI21, Y = NOT(A + B.C)} -820 -420 0 0 0.45 0.45 {}
-T {Build the gate inside the DUT (double-click it -> dut_aoi21.sch).
+T {Build the gate inside the DUT (select it and press `e` -> dut_aoi21.sch).
 
 Change which input switches and which are held to select the case you are
 measuring. As shipped this is the WORST CASE FALL and WORST CASE RISE:

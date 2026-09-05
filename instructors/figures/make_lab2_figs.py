@@ -58,7 +58,7 @@ print("wrote", os.path.join(OUT, "L2-03-pex-compare.png"))
 # share of the total shrinks as the load grows.
 loads = np.array([0.0, 1.0, 5.0, 20.0, 100.0])
 ideal_ps = np.array([100.0, 104.0, 120.0, 177.1, 467.8])
-pex_ps = np.array([105.8, 109.8, 125.7, 182.7, 473.5])
+pex_ps = np.array([106.8, 110.8, 126.7, 183.6, 474.3])   # magic 8.3.681 (image 2026.08)
 
 fig, ax = plt.subplots()
 ax.plot(loads, 100 * (pex_ps - ideal_ps) / ideal_ps, "o-", lw=1.8)
@@ -67,7 +67,7 @@ for x, y in zip(loads, 100 * (pex_ps - ideal_ps) / ideal_ps):
                 xytext=(6, 6), fontsize=9)
 ax.set_xlabel("load capacitance (fF)")
 ax.set_ylabel("increase in $t_{pHL}$ from parasitics (%)")
-ax.set_title("L6  The parasitics add about 6 ps regardless of load")
+ax.set_title("L6  The parasitics add about 6.6 ps regardless of load")
 ax.set_ylim(0, 7)
 fig.savefig(os.path.join(OUT, "L2-04-pex-vs-load.png"))
 plt.close(fig)

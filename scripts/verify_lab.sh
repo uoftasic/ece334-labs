@@ -77,10 +77,23 @@ if [ -d "$LABDIR/spice" ]; then
        && ! grep -qE '^[[:space:]]*(tran|dc|ac|op|noise)[[:space:]]' "$deck"; then
       echo "skip include-only: $name"; continue
     fi
-    if ! (cd "$LABDIR/spice" && timeout 300 ngspice -b "$name" >"$work/$name.log" 2>&1); then
+    # Decks differ in what directory their relative .include paths assume.
+    # lab4's want spice/ as the cwd (.include include/dff.spice); lab2's want
+    # the lab root, because the netlists magic extracts land there and the
+    # manual runs them as `ngspice -b spice/<deck>`. Try spice/ first, then the
+    # lab root, and only fail when neither resolves.
+    ran=""
+    if (cd "$LABDIR/spice" && timeout 300 ngspice -b "$name" >"$work/$name.log" 2>&1); then
+      ran="spice"
+    elif grep -q "Could not find include file" "$work/$name.log" 2>/dev/null &&
+         (cd "$LABDIR" && timeout 300 ngspice -b "spice/$name" >"$work/$name.log" 2>&1); then
+      ran="labroot"
+    fi
+    if [ -z "$ran" ]; then
       echo "FAIL simulate: $name"; tail -15 "$work/$name.log" | sed 's/^/    /'; fail=1
       continue
     fi
+    outdir="$LABDIR/spice"; [ "$ran" = labroot ] && outdir="$LABDIR"
 
     # Exiting zero is not the same as producing the right data. A deck with two
     # .control blocks is the specific way that goes wrong: `reset` restores the
@@ -95,8 +108,8 @@ if [ -d "$LABDIR/spice" ]; then
       for a in $outs; do
         for b in $outs; do
           [ "$a" \< "$b" ] || continue
-          [ -f "$LABDIR/spice/$a" ] && [ -f "$LABDIR/spice/$b" ] || continue
-          cmp -s "$LABDIR/spice/$a" "$LABDIR/spice/$b" && dup="$a and $b"
+          [ -f "$outdir/$a" ] && [ -f "$outdir/$b" ] || continue
+          cmp -s "$outdir/$a" "$outdir/$b" && dup="$a and $b"
         done
       done
       if [ -n "$dup" ]; then

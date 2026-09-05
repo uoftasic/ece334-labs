@@ -8,7 +8,7 @@ T {Three inverters delay the input; the NAND compares the input with the
 delayed, inverted copy. Both NAND inputs are high only during that delay,
 so "out" carries a narrow LOW-going pulse once per rising input edge.
 
-Build the circuit inside the DUT (double-click it -> dut_pulsegen.sch).
+Build the circuit inside the DUT (select it and press `e` -> dut_pulsegen.sch).
 Required net names: in  n3  out  vdd  vss.
 
 Writes pulsegen_tb.raw with v(in), v(n3), v(out).} -700 -370 0 0 0.32 0.32 {}

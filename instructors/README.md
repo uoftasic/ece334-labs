@@ -78,6 +78,40 @@ Lays the reference solutions over a scratch copy of the lab and runs the full
 netlist to simulate chain. `verify_lab.sh` on a student tree is *expected* to
 report "the DUT has not been built yet" -- the stubs ship empty on purpose.
 
+## Uplifting the Docker image
+
+The image tag is pinned in four places: `scripts/start_vnc.sh`,
+`scripts/start_vnc.bat`, `scripts/start_x.sh` and
+`.devcontainer/devcontainer.json`. `pdk/volare.lock` records the PDK build that
+came with it, and `docs/getting-started` quotes the tag and the disk figures.
+
+Before changing any of them, get a numeric baseline:
+
+    python3 instructors/golden_numbers.py > /tmp/golden-old.txt   # old image
+    python3 instructors/golden_numbers.py > /tmp/golden-new.txt   # new image
+    diff /tmp/golden-old.txt /tmp/golden-new.txt
+
+That script re-measures every quantity the manuals publish -- 35 of them across
+all four labs, including the Lab 2 DRC count, the LVS verdict and the five-point
+PEX sweep. Anything that moves is either a manual that now lies to students or a
+real behavioural change to explain. Going 2026.04 -> 2026.08, 30 of 35 came out
+bit-identical despite ngspice 46 -> 47 and a different open_pdks build; the five
+that moved were all magic's parasitic extraction.
+
+Two things the oracle CANNOT catch, both of which bit us on this uplift:
+
+- **A blocker in a tool the oracle does not drive.** netgen 1.5.323 started
+  choking on the commented `**.subckt` block XSchem writes for a top-level
+  wrapper. `scripts/run_lvs.sh` strips it now.
+- **A manual whose copy-pasteable commands are wrong.** The oracle runs decks
+  directly; it never types what the manual tells a student to type. Lab 4's L1
+  loop had never worked (it moved the deck to `/tmp` and broke its relative
+  `.include`), and Lab 0's Magic recipe left 16 `li.5` violations while the text
+  told students to reach zero. Both were years old and only surfaced when an
+  agent walked the manuals line by line.
+
+So: run the oracle for the numbers, and separately execute the manuals verbatim.
+
 ## Launchers
 
 Launchers fire only when **the selection is exactly one object** and **the

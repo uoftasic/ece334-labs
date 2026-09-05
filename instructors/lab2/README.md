@@ -21,7 +21,7 @@ Expect `DRC_COUNT=0` and `.subckt nand2 a b out vdd vss`.
 
 - DRC: 0 errors.
 - LVS against `common/xschem/nand2.sch`: **Circuits match uniquely.**
-- Extraction: 4 devices, 6 nets. PEX at `cthresh 0` adds 14 coupling caps.
+- Extraction: 4 devices, 6 nets. PEX at `cthresh 0` adds 12 coupling caps totalling 9.34 fF (magic 8.3.681; 8.3.636 emitted 14 totalling 9.94 fF, one of them zero-valued).
 - Sizing is `Wn = 2`, `Wp = 3`, `L = 0.5`, matching the Lab 1 cell. That is the
   legacy handout's 24:16 ratio at this lab's channel length.
 
@@ -29,11 +29,15 @@ Expect `DRC_COUNT=0` and `.subckt nand2 a b out vdd vss`.
 
 | C_load | ideal | extracted | change |
 |--------|-------|-----------|--------|
-| 0      | 100.0 ps | 105.8 ps | +5.8 % |
-| 1 fF   | 104.0 ps | 109.8 ps | +5.6 % |
-| 5 fF   | 120.0 ps | 125.7 ps | +4.8 % |
-| 20 fF  | 177.1 ps | 182.7 ps | +3.2 % |
-| 100 fF | 467.8 ps | 473.5 ps | +1.2 % |
+| 0      | 100.0 ps | 106.8 ps | +6.8 % |
+| 1 fF   | 104.0 ps | 110.8 ps | +6.5 % |
+| 5 fF   | 120.0 ps | 126.7 ps | +5.6 % |
+| 20 fF  | 177.1 ps | 183.6 ps | +3.7 % |
+| 100 fF | 467.8 ps | 474.3 ps | +1.4 % |
+
+Measured on image 2026.08 (magic 8.3.681). On 2026.04 (magic 8.3.636) the
+extracted column read 105.8 / 109.8 / 125.7 / 182.7 / 473.5 ps. The ideal
+column is unchanged; only the extractor moved.
 
 The parasitics contribute a roughly fixed ~6 ps, so they matter in proportion
 to how they compare with the load being driven.

@@ -1,23 +1,32 @@
 # SKY130 PDK pin for reproducibility (term-long lock)
 #
-# Read from the running pilot container, which is the build every measurement
-# in the manuals and every reference notebook output was produced against:
+# Read from the container the course actually runs. Every reference number in
+# the manuals and every notebook output was measured against this build.
 #
-#     $PDK_ROOT/sky130A/SOURCES        -> open_pdks <hash>
-#     $PDK_ROOT/ciel/sky130/versions/  -> <hash>
+#     $PDK_ROOT/sky130A/SOURCES       -> open_pdks <hash>
+#     ciel ls --pdk sky130            -> <hash>
 #
 # The image ships `ciel`, volare's successor; either resolves the same build.
 # To reproduce this exact PDK in a fresh container:
 #
-#     ciel enable --pdk sky130 7b70722e33c03fcb5dabcf4d479fb0822d9251c9
+#     ciel enable --pdk sky130 026824c7969ce6f4fc9678e6ca04b0a06a596c4b
 #
-# Re-pin only deliberately, between terms, and re-run
-# scripts/verify_solutions.sh for every lab afterwards: the reference numbers
-# printed in the manuals are tied to this build.
+# Re-pin only deliberately, between terms, and afterwards re-run
+#     python3 instructors/golden_numbers.py
+# on the old and new images and diff the two outputs. That script re-measures
+# every quantity the manuals publish; anything that moves is either a manual
+# that now lies to students or a real change to explain.
+#
+# History
+#   2026.04  open_pdks 7b70722e33c03fcb5dabcf4d479fb0822d9251c9
+#   2026.08  open_pdks 026824c7969ce6f4fc9678e6ca04b0a06a596c4b
+#            Device models unchanged in practice: 30 of the 35 measured
+#            quantities came out bit-identical. Only magic's parasitic
+#            extraction moved (see docs/labs/lab2 L6).
 #
 # See: https://github.com/fossi-foundation/volare
 
 PDK=sky130A
-OPEN_PDKS=7b70722e33c03fcb5dabcf4d479fb0822d9251c9
-VOLARE_BUILD=7b70722e33c03fcb5dabcf4d479fb0822d9251c9
-IMAGE_TAG=2026.04
+OPEN_PDKS=026824c7969ce6f4fc9678e6ca04b0a06a596c4b
+VOLARE_BUILD=026824c7969ce6f4fc9678e6ca04b0a06a596c4b
+IMAGE_TAG=2026.08

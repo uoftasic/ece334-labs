@@ -6,7 +6,7 @@ S {}
 E {}
 T {ECE334 Lab 1 - CMOS inverter testbench
 
-Build your inverter inside the DUT (double-click it -> dut_inv.sch).
+Build your inverter inside the DUT (select it and press `e` -> dut_inv.sch).
 Required net names:  in  out  vdd  vss   (do not rename them).
 
 Outputs written by the buttons below:

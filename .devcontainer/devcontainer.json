@@ -1,6 +1,6 @@
 {
   "name": "ECE334-OSIC",
-  "image": "hpretl/iic-osic-tools-devcontainer:2026.04",
+  "image": "hpretl/iic-osic-tools-devcontainer:2026.08",
   "pullPolicy": "always",
   "workspaceFolder": "/foss/designs",
   "mounts": [

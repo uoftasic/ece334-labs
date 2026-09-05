@@ -7,7 +7,7 @@ T {ECE334 Lab 1 - P2/L2  PMOS parameter extraction} -620 -400 0 0 0.45 0.45 {}
 T {The gate and drain sit at 0 V; the source and body are swept from 0 to 1.8 V,
 so V_SG is exactly the swept voltage and the same square-law fit applies.
 
-Build a diode-connected PMOS in the DUT (double-click it), W = 10, L = 2.
+Build a diode-connected PMOS in the DUT (select it and press `e`), W = 10, L = 2.
 Writes diode_pmos.raw with vsg and id.} -620 -350 0 0 0.32 0.32 {}
 C {devices/code_shown.sym} -620 -230 0 0 {name=MODELS only_toplevel=true value=".lib $PDK_ROOT/sky130A/libs.tech/ngspice/sky130.lib.spice tt"}
 C {devices/code_shown.sym} -620 -180 0 0 {name=CONTROL only_toplevel=true value="

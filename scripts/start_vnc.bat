@@ -1,7 +1,7 @@
 @echo off
 REM Launch IIC-OSIC-TOOLS with noVNC on Windows (Docker Desktop required)
 setlocal
-if not defined DOCKER_TAG set DOCKER_TAG=2026.04
+if not defined DOCKER_TAG set DOCKER_TAG=2026.08
 if not defined CONTAINER_NAME set CONTAINER_NAME=ece334-osic
 if not defined VNC_PW set VNC_PW=abc123
 if not defined VNC_RESOLUTION set VNC_RESOLUTION=1280x800
@@ -20,7 +20,7 @@ echo   Lab manuals ^& cheatsheets are online: https://uoftasic.com/ece334-docs/
 
 docker pull %IMAGE%
 docker rm -f %CONTAINER_NAME% 2>nul
-docker run -d --name %CONTAINER_NAME% --shm-size=1g --security-opt seccomp=unconfined -p %HOST_PORT%:80 -e VNC_PW=%VNC_PW% -e VNC_RESOLUTION=%VNC_RESOLUTION% -v "%REPO_ROOT%:/foss/designs" -v "%REPO_ROOT%/docker/novnc-index.html:/usr/share/novnc/index.html:ro" %IMAGE%
+docker run -d --name %CONTAINER_NAME% --shm-size=1g --security-opt seccomp=unconfined -p %HOST_PORT%:80 -e VNC_PW=%VNC_PW% -e XKB_KEYBOARD_LAYOUT=us -e VNC_RESOLUTION=%VNC_RESOLUTION% -v "%REPO_ROOT%:/foss/designs" -v "%REPO_ROOT%/docker/novnc-index.html:/usr/share/novnc/index.html:ro" %IMAGE%
 echo Container %CONTAINER_NAME% started.
 call "%SCRIPT_DIR%post_start_services.bat"
 endlocal
