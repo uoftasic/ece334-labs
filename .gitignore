@@ -57,3 +57,7 @@ lab*/xschem/simulations/
 # Editor/tooling droppings that have each been committed once already.
 *.bak
 .pytest_cache/
+
+# Simulation output the Lab 2 testbenches write next to the layout.
+lab2_layout/nand2_*wave*.txt
+lab2_layout/*.ext
